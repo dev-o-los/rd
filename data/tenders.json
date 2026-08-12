@@ -1,0 +1,504 @@
+{
+  "road_tenders": [
+    {
+      "s_no": 21,
+      "e_published_date": "2026-08-07T18:00:00",
+      "closing_date": "2026-08-17T15:00:00",
+      "opening_date": "2026-08-18T16:00:00",
+      "title": "Kanpur road yojna ke antergat Mragshira Apartment ka 1 years hetu mentinance ka kary.",
+      "reference_number": "83/E-Nivida/CE/2026-27/16",
+      "tender_id": "2026_LDAUP_1175282_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "UP Rajkiya Nirman Nigam & Associates",
+      "budget_inr": 4500000,
+      "status": "Active Maintenance",
+      "road_type": "Arterial Road",
+      "geo_location": {
+        "area_name": "Kanpur Road (Mragshira Apartment), Lucknow",
+        "latitude": 26.7765,
+        "longitude": 80.8842,
+        "coverage_radius_meters": 1200,
+        "route_waypoints": [
+          {"lat": 26.7720, "lng": 80.8810},
+          {"lat": 26.7765, "lng": 80.8842},
+          {"lat": 26.7810, "lng": 80.8885}
+        ]
+      }
+    },
+    {
+      "s_no": 1,
+      "e_published_date": "2026-08-10T09:00:00",
+      "closing_date": "2026-08-18T15:00:00",
+      "opening_date": "2026-08-19T16:00:00",
+      "title": "Gomti Nagar Vistar Sector-5 me Plot No. 5/175 ke samne atikraman se mukt karaye gaye park wa sadak ka vikash karya",
+      "reference_number": "80/E-Nivida/CE/2026-27/10",
+      "tender_id": "2026_LDAUP_1175650_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Shree Ram Infra Projects Ltd",
+      "budget_inr": 3200000,
+      "status": "Under Bidding",
+      "road_type": "Sector Road",
+      "geo_location": {
+        "area_name": "Gomti Nagar Vistar Sector-5, Lucknow",
+        "latitude": 26.8392,
+        "longitude": 81.0185,
+        "coverage_radius_meters": 800,
+        "route_waypoints": [
+          {"lat": 26.8375, "lng": 81.0160},
+          {"lat": 26.8392, "lng": 81.0185},
+          {"lat": 26.8410, "lng": 81.0210}
+        ]
+      }
+    },
+    {
+      "s_no": 3,
+      "e_published_date": "2026-08-10T09:00:00",
+      "closing_date": "2026-08-18T15:00:00",
+      "opening_date": "2026-08-19T16:00:00",
+      "title": "Gomti Nagar Vistar Sector-1 sthit thana chauraha se RITES Bhawan hote huye Shaheed Path ke nikat UP State Nirman Sahkari Sangh Ltd office tak service road boundary wall tatha interlocking sudharikaran ka karya",
+      "reference_number": "80/E-Nivida/CE/2026-27/08",
+      "tender_id": "2026_LDAUP_1175656_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Lucknow Express Highways & Infra Ltd",
+      "budget_inr": 12500000,
+      "status": "Awarded / Under Construction",
+      "road_type": "Service Road / Highway Connector",
+      "geo_location": {
+        "area_name": "Shaheed Path Service Road (Sector-1 to RITES Bhawan), Lucknow",
+        "latitude": 26.8465,
+        "longitude": 81.0102,
+        "coverage_radius_meters": 1500,
+        "route_waypoints": [
+          {"lat": 26.8420, "lng": 81.0050},
+          {"lat": 26.8465, "lng": 81.0102},
+          {"lat": 26.8510, "lng": 81.0160}
+        ]
+      }
+    },
+    {
+      "s_no": 47,
+      "e_published_date": "2026-08-05T12:00:00",
+      "closing_date": "2026-08-10T15:00:00",
+      "opening_date": "2026-08-11T16:00:00",
+      "title": "Gomti Nagar Yojna Vinit Khand-6 me Internal Road ki marramat/sudharikaran ka karya",
+      "reference_number": "83/E-NIVIDA/CE/2026_15",
+      "tender_id": "2026_LDAUP_1174804_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Awadh Constructions",
+      "budget_inr": 2800000,
+      "status": "Active Maintenance",
+      "road_type": "Internal Colony Road",
+      "geo_location": {
+        "area_name": "Vinit Khand-6, Gomti Nagar, Lucknow",
+        "latitude": 26.8580,
+        "longitude": 81.0015,
+        "coverage_radius_meters": 600,
+        "route_waypoints": [
+          {"lat": 26.8565, "lng": 81.0000},
+          {"lat": 26.8580, "lng": 81.0015},
+          {"lat": 26.8595, "lng": 81.0030}
+        ]
+      }
+    },
+    {
+      "s_no": 51,
+      "e_published_date": "2026-08-04T18:00:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Sector-2 me 18MTR chaudi sadak par sadak, sewer, drain, trench evam divider ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (8)",
+      "tender_id": "2026_LDAUP_1174697_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Ganga Builders & Civil Corp",
+      "budget_inr": 18500000,
+      "status": "Under Bidding",
+      "road_type": "18m Sector Main Road",
+      "geo_location": {
+        "area_name": "Varun Vihar Sector-2 (18m Road), Lucknow",
+        "latitude": 26.8125,
+        "longitude": 80.9320,
+        "coverage_radius_meters": 900,
+        "route_waypoints": [
+          {"lat": 26.8105, "lng": 80.9300},
+          {"lat": 26.8125, "lng": 80.9320},
+          {"lat": 26.8145, "lng": 80.9340}
+        ]
+      }
+    },
+    {
+      "s_no": 52,
+      "e_published_date": "2026-08-04T18:00:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Sector-1 wa Sector-2 ke madhya 30 MTR chaudi sadak par sadak, sewer, drain, trench, water supply evam divider ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (4)",
+      "tender_id": "2026_LDAUP_1174701_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Supertech Roadworks India Pvt Ltd",
+      "budget_inr": 34000000,
+      "status": "Under Bidding",
+      "road_type": "30m Main Arterial Avenue",
+      "geo_location": {
+        "area_name": "Varun Vihar Sector 1-2 Dividing Road, Lucknow",
+        "latitude": 26.8140,
+        "longitude": 80.9360,
+        "coverage_radius_meters": 1200,
+        "route_waypoints": [
+          {"lat": 26.8115, "lng": 80.9330},
+          {"lat": 26.8140, "lng": 80.9360},
+          {"lat": 26.8170, "lng": 80.9390}
+        ]
+      }
+    },
+    {
+      "s_no": 54,
+      "e_published_date": "2026-08-04T17:30:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Kashi Khand wa Kailash Khand ko jodne wali 30 MTR chaudi sadak par sadak, sewer, drain, trench, water supply evam divider ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (7)",
+      "tender_id": "2026_LDAUP_1174674_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Kashi Civil Projects LLP",
+      "budget_inr": 29500000,
+      "status": "Under Bidding",
+      "road_type": "30m Link Avenue",
+      "geo_location": {
+        "area_name": "Varun Vihar (Kashi-Kailash Link), Lucknow",
+        "latitude": 26.8175,
+        "longitude": 80.9385,
+        "coverage_radius_meters": 1000,
+        "route_waypoints": [
+          {"lat": 26.8150, "lng": 80.9360},
+          {"lat": 26.8175, "lng": 80.9385},
+          {"lat": 26.8200, "lng": 80.9410}
+        ]
+      }
+    },
+    {
+      "s_no": 55,
+      "e_published_date": "2026-08-04T17:30:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Sector-2, 4 wa Sector-3 ke madhya 30 MTR chaudi sadak par sadak, sewer, drain, trench evam divider ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (2)",
+      "tender_id": "2026_LDAUP_1174685_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Apex Road Systems Pvt Ltd",
+      "budget_inr": 31000000,
+      "status": "Under Bidding",
+      "road_type": "30m Sector Corridor",
+      "geo_location": {
+        "area_name": "Varun Vihar Sector 2-3-4 Central Road, Lucknow",
+        "latitude": 26.8110,
+        "longitude": 80.9410,
+        "coverage_radius_meters": 1100,
+        "route_waypoints": [
+          {"lat": 26.8090, "lng": 80.9380},
+          {"lat": 26.8110, "lng": 80.9410},
+          {"lat": 26.8130, "lng": 80.9440}
+        ]
+      }
+    },
+    {
+      "s_no": 56,
+      "e_published_date": "2026-08-04T17:00:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Sector-4 me 18MTR chaudi sadak par sadak, sewer, drain, trench evam divider ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (5)",
+      "tender_id": "2026_LDAUP_1174641_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Prakash Infra Enterprise",
+      "budget_inr": 16000000,
+      "status": "Under Bidding",
+      "road_type": "18m Internal Sector Road",
+      "geo_location": {
+        "area_name": "Varun Vihar Sector-4, Lucknow",
+        "latitude": 26.8080,
+        "longitude": 80.9435,
+        "coverage_radius_meters": 750,
+        "route_waypoints": [
+          {"lat": 26.8065, "lng": 80.9420},
+          {"lat": 26.8080, "lng": 80.9435},
+          {"lat": 26.8095, "lng": 80.9450}
+        ]
+      }
+    },
+    {
+      "s_no": 58,
+      "e_published_date": "2026-08-04T17:00:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Sector-3 wa Sector-6 ke madhya 30 MTR chaudi sadak par sadak, sewer, drain, trench evam divider ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (6)",
+      "tender_id": "2026_LDAUP_1174663_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "R.K. Infrastructures",
+      "budget_inr": 27000000,
+      "status": "Under Bidding",
+      "road_type": "30m Sector Boundary Road",
+      "geo_location": {
+        "area_name": "Varun Vihar Sector 3-6 Road, Lucknow",
+        "latitude": 26.8050,
+        "longitude": 80.9470,
+        "coverage_radius_meters": 1000,
+        "route_waypoints": [
+          {"lat": 26.8030, "lng": 80.9450},
+          {"lat": 26.8050, "lng": 80.9470},
+          {"lat": 26.8070, "lng": 80.9490}
+        ]
+      }
+    },
+    {
+      "s_no": 59,
+      "e_published_date": "2026-08-04T17:00:00",
+      "closing_date": "2026-08-31T15:00:00",
+      "opening_date": "2026-09-01T16:00:00",
+      "title": "Varun Vihar Awasiya Yojana ke antargat Sector-5 me 18MTR chaudi sadak par sadak, sewer, drain, water supply evam culvert ka nirman vikas karya.",
+      "reference_number": "83/E-NIVIDA/CE/2026 (9)",
+      "tender_id": "2026_LDAUP_1174651_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "M.P. Developers Lucknow",
+      "budget_inr": 19000000,
+      "status": "Under Bidding",
+      "road_type": "18m Sector Road with Culvert",
+      "geo_location": {
+        "area_name": "Varun Vihar Sector-5, Lucknow",
+        "latitude": 26.8020,
+        "longitude": 80.9510,
+        "coverage_radius_meters": 800,
+        "route_waypoints": [
+          {"lat": 26.8005, "lng": 80.9495},
+          {"lat": 26.8020, "lng": 80.9510},
+          {"lat": 26.8035, "lng": 80.9525}
+        ]
+      }
+    },
+    {
+      "s_no": 70,
+      "e_published_date": "2026-08-03T09:00:00",
+      "closing_date": "2026-08-25T15:00:00",
+      "opening_date": "2026-08-26T16:00:00",
+      "title": "Gram Sugamau sthit (Lavkush Nagar) mein antrik vikas karya ke antargat sadak, nali, park, sewer line and water line nirman and vikas karya.",
+      "reference_number": "80/E-NIVIDA/C.E./2026-27/3",
+      "tender_id": "2026_LDAUP_1174208_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Lavkush Gramin Vikas Engineers",
+      "budget_inr": 14200000,
+      "status": "Active Contract",
+      "road_type": "Gramin Internal Road",
+      "geo_location": {
+        "area_name": "Sugamau (Lavkush Nagar), Lucknow",
+        "latitude": 26.8950,
+        "longitude": 81.0250,
+        "coverage_radius_meters": 1300,
+        "route_waypoints": [
+          {"lat": 26.8920, "lng": 81.0220},
+          {"lat": 26.8950, "lng": 81.0250},
+          {"lat": 26.8980, "lng": 81.0280}
+        ]
+      }
+    },
+    {
+      "s_no": 72,
+      "e_published_date": "2026-08-01T18:00:00",
+      "closing_date": "2026-08-11T15:00:00",
+      "opening_date": "2026-08-12T16:00:00",
+      "title": "Mansarovar Yojna ke antargat Under Pass Chauraha to Deepshikha and Magha Apartment ko jane wali damaged road ke sudhreekaran ka karya",
+      "reference_number": "75/E-Nivida/CE/2026-27/15",
+      "tender_id": "2026_LDAUP_1174020_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Mansarovar Roadlines & Tar Construction",
+      "budget_inr": 6800000,
+      "status": "Active Maintenance",
+      "road_type": "Residential Connector Road",
+      "geo_location": {
+        "area_name": "Mansarovar Yojna (Underpass to Deepshikha Apt), Lucknow",
+        "latitude": 26.7680,
+        "longitude": 80.8950,
+        "coverage_radius_meters": 750,
+        "route_waypoints": [
+          {"lat": 26.7660, "lng": 80.8930},
+          {"lat": 26.7680, "lng": 80.8950},
+          {"lat": 26.7700, "lng": 80.8970}
+        ]
+      }
+    },
+    {
+      "s_no": 76,
+      "e_published_date": "2026-08-01T15:00:00",
+      "closing_date": "2026-08-17T12:00:00",
+      "opening_date": "2026-08-17T12:30:00",
+      "title": "Under District Lucknow, Construction of CC road and drain on the side of the lane next to the control of Kale in Mohalla Fish Phatak Colony under Ward No 99 Acharya Narendra Dev of Vidhan Sabha West, Lot No 2",
+      "reference_number": "981/EE RED Lucknow/26-27 Dt 06/07/2026",
+      "tender_id": "2026_REDUP_1174069_2",
+      "organisation": "Director Cum Chief Engineer RED||CHIEF ENGINEER EAST||SE LUCKNOW CIRCLE||EE LUCKNOW",
+      "contractor_name": "Vidhansabha Rural Engineering Works",
+      "budget_inr": 1800000,
+      "status": "Active Contract",
+      "road_type": "Municipal CC Lane",
+      "geo_location": {
+        "area_name": "Fish Phatak Colony, Ward 99 Acharya Narendra Dev, Lucknow",
+        "latitude": 26.8620,
+        "longitude": 80.9150,
+        "coverage_radius_meters": 500,
+        "route_waypoints": [
+          {"lat": 26.8610, "lng": 80.9140},
+          {"lat": 26.8620, "lng": 80.9150},
+          {"lat": 26.8630, "lng": 80.9160}
+        ]
+      }
+    },
+    {
+      "s_no": 77,
+      "e_published_date": "2026-08-01T15:00:00",
+      "closing_date": "2026-08-17T12:00:00",
+      "opening_date": "2026-08-17T12:30:00",
+      "title": "Under District Lucknow, Construction of CC road and drain from General Store towards Bhishma Dev Bajpai house on Hardoi Road under Ward No 85 Mallahi Tola I of Vidhan Sabha North, Lot No 4",
+      "reference_number": "981/EE RED Lucknow/26-27 Dt 06/07/2026",
+      "tender_id": "2026_REDUP_1174069_4",
+      "organisation": "Director Cum Chief Engineer RED||CHIEF ENGINEER EAST||SE LUCKNOW CIRCLE||EE LUCKNOW",
+      "contractor_name": "Hardoi Road Builders & Co",
+      "budget_inr": 2400000,
+      "status": "Active Contract",
+      "road_type": "State Highway / Ward Road",
+      "geo_location": {
+        "area_name": "Hardoi Road (Mallahi Tola I, Ward 85), Lucknow",
+        "latitude": 26.8730,
+        "longitude": 80.8920,
+        "coverage_radius_meters": 700,
+        "route_waypoints": [
+          {"lat": 26.8710, "lng": 80.8900},
+          {"lat": 26.8730, "lng": 80.8920},
+          {"lat": 26.8750, "lng": 80.8940}
+        ]
+      }
+    },
+    {
+      "s_no": 78,
+      "e_published_date": "2026-08-01T15:00:00",
+      "closing_date": "2026-08-17T12:00:00",
+      "opening_date": "2026-08-17T12:30:00",
+      "title": "Under District Lucknow, Construction of road and drain work from Deepak General Merchant shop to Anil Sharma 1/4 Lalsagar Verma house under Vidhan Sabha East, Vidhan Sabha Ward-40 Indira Priyadarshini Ward, Lot No 5",
+      "reference_number": "981/EE RED Lucknow/26-27 Dt 06/07/2026",
+      "tender_id": "2026_REDUP_1174069_5",
+      "organisation": "Director Cum Chief Engineer RED||CHIEF ENGINEER EAST||SE LUCKNOW CIRCLE||EE LUCKNOW",
+      "contractor_name": "Priyadarshini Civil Infra",
+      "budget_inr": 2100000,
+      "status": "Active Contract",
+      "road_type": "Ward Road",
+      "geo_location": {
+        "area_name": "Indira Priyadarshini Ward 40 (East Lucknow), Lucknow",
+        "latitude": 26.8780,
+        "longitude": 80.9750,
+        "coverage_radius_meters": 600,
+        "route_waypoints": [
+          {"lat": 26.8765, "lng": 80.9735},
+          {"lat": 26.8780, "lng": 80.9750},
+          {"lat": 26.8795, "lng": 80.9765}
+        ]
+      }
+    },
+    {
+      "s_no": 79,
+      "e_published_date": "2026-08-01T15:00:00",
+      "closing_date": "2026-08-17T12:00:00",
+      "opening_date": "2026-08-17T12:30:00",
+      "title": "Under District Lucknow, Construction of CC road from Durga Mata Mandir Gate to Shri Satyendra Singh house in New Nandi Vihar Chinhat, Lucknow, Lot No 6",
+      "reference_number": "981/EE RED Lucknow/26-27 Dt 06/07/2026",
+      "tender_id": "2026_REDUP_1174069_6",
+      "organisation": "Director Cum Chief Engineer RED||CHIEF ENGINEER EAST||SE LUCKNOW CIRCLE||EE LUCKNOW",
+      "contractor_name": "Chinhat Roadlines & Developers",
+      "budget_inr": 1950000,
+      "status": "Active Maintenance",
+      "road_type": "Suburban Link Road",
+      "geo_location": {
+        "area_name": "New Nandi Vihar, Chinhat, Lucknow",
+        "latitude": 26.8890,
+        "longitude": 81.0560,
+        "coverage_radius_meters": 800,
+        "route_waypoints": [
+          {"lat": 26.8870, "lng": 81.0540},
+          {"lat": 26.8890, "lng": 81.0560},
+          {"lat": 26.8910, "lng": 81.0580}
+        ]
+      }
+    },
+    {
+      "s_no": 80,
+      "e_published_date": "2026-08-01T15:00:00",
+      "closing_date": "2026-08-17T12:00:00",
+      "opening_date": "2026-08-17T12:30:00",
+      "title": "Under District Lucknow, Construction of CC road from Rahul house to temple in village Tadkheda Barwan Kalan of Gram Panchayat Jehata under Khand Kakori, Lot No 1",
+      "reference_number": "981/EE RED Lucknow/26-27 Dt 06/07/2026",
+      "tender_id": "2026_REDUP_1174069_1",
+      "organisation": "Director Cum Chief Engineer RED||CHIEF ENGINEER EAST||SE LUCKNOW CIRCLE||EE LUCKNOW",
+      "contractor_name": "Kakori Rural Builders Consortium",
+      "budget_inr": 1650000,
+      "status": "Active Contract",
+      "road_type": "Gram Panchayat Road",
+      "geo_location": {
+        "area_name": "Tadkheda Barwan Kalan, Kakori, Lucknow",
+        "latitude": 26.8810,
+        "longitude": 80.7950,
+        "coverage_radius_meters": 900,
+        "route_waypoints": [
+          {"lat": 26.8790, "lng": 80.7930},
+          {"lat": 26.8810, "lng": 80.7950},
+          {"lat": 26.8830, "lng": 80.7970}
+        ]
+      }
+    },
+    {
+      "s_no": 87,
+      "e_published_date": "2026-07-31T18:00:00",
+      "closing_date": "2026-08-25T15:00:00",
+      "opening_date": "2026-08-26T16:00:00",
+      "title": "Anant Nagar Awasiya Yojana (Mohan Road) ke antargat Part A Nadarganj se TS Mishra Pul tak road ko chaurikaran karne me aa rahi industrial boundary dhwastikaran karte hue pichhe ki or nayi boundary banane ka karya.",
+      "reference_number": "80/E-NIVIDA/CE/2026-27_(06)",
+      "tender_id": "2026_LDAUP_1173891_1",
+      "organisation": "Lucknow Development Authority",
+      "contractor_name": "Mohan Highway Expansion Agency",
+      "budget_inr": 48000000,
+      "status": "Active Widening Work",
+      "road_type": "Major Industrial Highway",
+      "geo_location": {
+        "area_name": "Mohan Road (Nadarganj to TS Mishra Bridge), Lucknow",
+        "latitude": 26.7890,
+        "longitude": 80.8460,
+        "coverage_radius_meters": 2000,
+        "route_waypoints": [
+          {"lat": 26.7820, "lng": 80.8400},
+          {"lat": 26.7890, "lng": 80.8460},
+          {"lat": 26.7960, "lng": 80.8520}
+        ]
+      }
+    },
+    {
+      "s_no": 93,
+      "e_published_date": "2026-07-31T09:00:00",
+      "closing_date": "2026-08-21T15:00:00",
+      "opening_date": "2026-08-21T15:30:00",
+      "title": "Repair and maintenance of link road Khanipur (L-0.40 Km)",
+      "reference_number": "N.K.Lko/E-Tender/2026-1298 Dated 28.07.2026",
+      "tender_id": "2026_RKUMP_1173067_1",
+      "organisation": "Rajya Krishi Utpadan Mandi Parishad, UP||SE Zone-5||Dy Director Construction, Lucknow",
+      "contractor_name": "Mandi Krishi Road Repair Pvt Ltd",
+      "budget_inr": 1100000,
+      "status": "Active Maintenance",
+      "road_type": "Mandi Link Road",
+      "geo_location": {
+        "area_name": "Khanipur Link Road (0.40 Km), Lucknow",
+        "latitude": 26.8320,
+        "longitude": 80.8750,
+        "coverage_radius_meters": 500,
+        "route_waypoints": [
+          {"lat": 26.8310, "lng": 80.8740},
+          {"lat": 26.8320, "lng": 80.8750},
+          {"lat": 26.8330, "lng": 80.8760}
+        ]
+      }
+    }
+  ]
+}
