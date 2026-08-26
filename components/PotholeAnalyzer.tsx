@@ -384,12 +384,20 @@ export default function PotholeAnalyzer() {
                 </div>
               </div>
 
-              {/* Register Complaint Button */}
+              {/* Action Buttons: Register or Open Mobile Tender Complaint Page */}
               <div className="space-y-3 pt-2 border-t border-slate-800">
+                <Link
+                  href={`/tender-complaint?tenderId=${encodeURIComponent(result.matchResult.matchedTender.tender_id)}`}
+                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm py-3 px-6 rounded-xl shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all"
+                >
+                  <span>Open Dedicated Mobile Tender & Complaint View</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
                 <button
                   onClick={handleRegisterComplaint}
                   disabled={isRegisteringComplaint}
-                  className="w-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-sm py-3.5 px-6 rounded-xl shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+                  className="w-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold text-sm py-3.5 px-6 rounded-xl shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer"
                 >
                   {isRegisteringComplaint ? (
                     <>
