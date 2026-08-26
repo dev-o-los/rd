@@ -2,32 +2,22 @@
 
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import {
   ArrowLeft,
-  Camera,
   CheckCircle2,
   AlertCircle,
   FileText,
   UserCheck,
   Send,
-  Flame,
   ShieldAlert,
-  MapPin,
   Building2,
-  Calendar,
-  IndianRupee,
-  Clock,
-  Sparkles,
-  ArrowRight,
   RefreshCw,
-  Phone,
-  AlertTriangle
+  ArrowRight
 } from 'lucide-react';
 
 function TenderComplaintContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const tenderIdParam = searchParams.get('tenderId');
   const noMatchParam = searchParams.get('noMatch');
 
@@ -46,7 +36,6 @@ function TenderComplaintContent() {
   const [isEscalated, setIsEscalated] = useState<boolean>(false);
 
   useEffect(() => {
-    // 1. Try to load report & image from sessionStorage
     if (typeof window !== 'undefined') {
       const storedReport = sessionStorage.getItem('current_defect_report');
       const storedImage = sessionStorage.getItem('current_defect_image');
@@ -70,7 +59,6 @@ function TenderComplaintContent() {
       }
     }
 
-    // 2. Fetch tender details directly if needed
     if (tenderIdParam) {
       fetchTenderById(tenderIdParam);
     } else {
@@ -144,105 +132,99 @@ function TenderComplaintContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
-        <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin mb-3" />
-        <p className="text-sm font-semibold text-slate-300">Loading Tender & Contractor Profile...</p>
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+        <RefreshCw className="w-6 h-6 text-white animate-spin mb-3" />
+        <p className="text-xs font-mono text-zinc-400">LOADING CONTRACTOR PROFILE...</p>
       </div>
     );
   }
 
   if (noMatchParam || (!tender && !report?.matchResult?.matched)) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 p-4 max-w-md mx-auto flex flex-col justify-center items-center text-center space-y-4">
-        <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-          <AlertCircle className="w-8 h-8" />
+      <div className="min-h-screen bg-black text-zinc-100 p-4 max-w-md mx-auto flex flex-col justify-center items-center text-center space-y-4">
+        <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300">
+          <AlertCircle className="w-7 h-7" />
         </div>
-        <h2 className="text-lg font-extrabold text-white">No Matching Road Tender Found</h2>
-        <p className="text-xs text-slate-400">
-          The defect coordinates did not match any active government road tender in the database within coverage radius.
+        <h2 className="text-base font-bold text-white">No Matching Tender Found</h2>
+        <p className="text-xs text-zinc-400">
+          The defect coordinates did not match any active government road tender in the database.
         </p>
         <Link
           href="/"
-          className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs py-3 px-6 rounded-2xl flex items-center gap-2 transition-all shadow-lg shadow-indigo-600/30"
+          className="bg-white hover:bg-zinc-200 text-black font-bold text-xs py-3 px-6 rounded-xl flex items-center gap-2 transition-all"
         >
-          <ArrowLeft className="w-4 h-4" /> Back to Camera Capture
+          <ArrowLeft className="w-4 h-4 text-black" /> Back to Camera
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white pb-12">
-      {/* Mobile Top App Bar */}
-      <header className="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 py-3.5 px-4">
+    <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-white selection:text-black pb-12">
+      {/* Top Navigation */}
+      <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-zinc-800 py-3.5 px-4">
         <div className="max-w-md mx-auto flex items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Retake Photo</span>
           </Link>
 
-          <span className="text-xs font-extrabold tracking-tight text-white flex items-center gap-1.5">
-            <ShieldAlert className="w-4 h-4 text-indigo-400" />
-            Tender & Contractor Profile
+          <span className="text-xs font-mono font-bold tracking-wider uppercase text-white flex items-center gap-1.5">
+            <ShieldAlert className="w-4 h-4 text-zinc-300" />
+            Contractor Profile
           </span>
 
           <Link
             href="/escalated"
-            className="text-[11px] font-bold text-rose-400 bg-rose-500/10 border border-rose-500/30 px-2.5 py-1 rounded-full hover:bg-rose-500/20 transition-all flex items-center gap-1"
+            className="text-[11px] font-mono font-bold text-zinc-300 bg-zinc-900 border border-zinc-800 px-3 py-1 rounded-full hover:bg-zinc-800 transition-all"
           >
-            <Flame className="w-3 h-3" />
             Board
           </Link>
         </div>
       </header>
 
-      {/* Main Mobile Screen Content */}
+      {/* Main Content */}
       <main className="max-w-md mx-auto px-4 pt-4 space-y-4">
-        {/* Captured Defect Preview Thumbnail & Match Proximity Banner */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 shadow-xl space-y-3">
+        {/* Defect Preview Card */}
+        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-4 shadow-2xl space-y-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="flex items-center gap-1.5 font-bold text-emerald-400">
-              <CheckCircle2 className="w-4 h-4" /> AI Contractor Matched
+            <span className="flex items-center gap-1.5 font-mono text-zinc-200 font-bold">
+              <CheckCircle2 className="w-4 h-4 text-white" /> TENDER MATCHED
             </span>
             {report?.matchResult?.distanceMeters !== undefined && (
-              <span className="font-mono text-[11px] bg-slate-950 px-2.5 py-1 rounded-full border border-slate-800 text-slate-300">
-                {report.matchResult.distanceMeters}m from Tender Path
+              <span className="font-mono text-[11px] bg-zinc-900 px-2.5 py-1 rounded-full border border-zinc-800 text-zinc-400">
+                {report.matchResult.distanceMeters}m away
               </span>
             )}
           </div>
 
           {capturedPhotoUrl && (
-            <div className="relative rounded-2xl overflow-hidden border border-slate-700 aspect-16/9 bg-slate-950">
+            <div className="relative rounded-2xl overflow-hidden border border-zinc-800 aspect-16/9 bg-black">
               <img
                 src={capturedPhotoUrl}
                 alt="Captured Road Defect"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover grayscale opacity-90 contrast-125"
               />
-              <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-md px-2.5 py-0.5 rounded-md text-[10px] font-mono text-emerald-300 border border-white/10">
-                📍 Saved to Camera Roll
-              </div>
             </div>
           )}
 
-          {/* AI Defect Assessment Chips */}
+          {/* AI Metrics */}
           {report?.priorityAssessment && (
-            <div className="grid grid-cols-3 gap-2 text-center pt-1">
-              <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                <div className="text-[10px] text-slate-400">DEFECT DEPTH</div>
+            <div className="grid grid-cols-3 gap-2 text-center pt-1 font-mono">
+              <div className="bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800">
+                <div className="text-[9px] text-zinc-400 uppercase">DEPTH</div>
                 <div className="text-xs font-bold text-white mt-0.5">{report.defectDepthCm || 8} cm</div>
               </div>
-              <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                <div className="text-[10px] text-slate-400">DEFECT WIDTH</div>
+              <div className="bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800">
+                <div className="text-[9px] text-zinc-400 uppercase">WIDTH</div>
                 <div className="text-xs font-bold text-white mt-0.5">{report.defectWidthCm || 40} cm</div>
               </div>
-              <div className="bg-slate-950 p-2 rounded-xl border border-slate-800">
-                <div className="text-[10px] text-slate-400">URGENCY</div>
-                <div className={`text-xs font-extrabold mt-0.5 ${
-                  report.priorityAssessment.level === 'CRITICAL' ? 'text-rose-400' : 'text-amber-400'
-                }`}>
+              <div className="bg-zinc-900/80 p-2.5 rounded-xl border border-zinc-800">
+                <div className="text-[9px] text-zinc-400 uppercase">SEVERITY</div>
+                <div className="text-xs font-bold text-white mt-0.5">
                   {report.priorityAssessment.level}
                 </div>
               </div>
@@ -251,128 +233,120 @@ function TenderComplaintContent() {
         </div>
 
         {/* Accountable Contractor Profile Card */}
-        <div className="bg-gradient-to-b from-indigo-950/40 to-slate-900 border border-indigo-500/30 rounded-3xl p-5 shadow-2xl space-y-4 relative overflow-hidden">
+        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-2xl space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
-              <UserCheck className="w-4 h-4 text-emerald-400" /> Accountable Contractor
+            <div className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <UserCheck className="w-4 h-4 text-white" /> Contractor Liability
             </div>
 
-            {/* Live Complaint Badge */}
-            <span
-              className={`px-3 py-1 text-xs font-bold rounded-full border flex items-center gap-1.5 ${
-                isEscalated
-                  ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 animate-pulse'
-                  : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-              }`}
-            >
-              <Flame className="w-3.5 h-3.5" />
+            <span className="px-3 py-1 text-xs font-mono font-bold rounded-full bg-zinc-900 text-zinc-200 border border-zinc-800">
               {liveCount} / 3 Complaints
             </span>
           </div>
 
           <div>
-            <div className="text-lg font-black text-white tracking-tight leading-snug">
+            <div className="text-lg font-extrabold text-white tracking-tight leading-snug">
               {tender?.contractor_name || 'Assigned Contractor'}
             </div>
-            <div className="text-xs text-emerald-400 font-medium mt-0.5 flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Responsible for maintenance under {tender?.organisation}</span>
+            <div className="text-xs text-zinc-400 mt-1 flex items-center gap-1.5">
+              <Building2 className="w-3.5 h-3.5 text-zinc-300" />
+              <span>Assigned by {tender?.organisation}</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs pt-1">
-            <div className="bg-slate-950/70 p-3 rounded-2xl border border-slate-800">
-              <div className="text-[10px] text-slate-400">CONTRACT BUDGET</div>
+          <div className="grid grid-cols-2 gap-2 text-xs pt-1 font-mono">
+            <div className="bg-zinc-900/60 p-3 rounded-2xl border border-zinc-800">
+              <div className="text-[10px] text-zinc-500">BUDGET</div>
               <div className="text-sm font-bold text-white mt-0.5">
                 ₹{((tender?.budget_inr || 0) / 100000).toFixed(2)} Lakhs
               </div>
             </div>
-            <div className="bg-slate-950/70 p-3 rounded-2xl border border-slate-800">
-              <div className="text-[10px] text-slate-400">CONTRACT STATUS</div>
-              <div className="text-sm font-bold text-indigo-300 mt-0.5 truncate">
+            <div className="bg-zinc-900/60 p-3 rounded-2xl border border-zinc-800">
+              <div className="text-[10px] text-zinc-500">STATUS</div>
+              <div className="text-xs font-bold text-zinc-300 mt-1 truncate">
                 {tender?.status || 'Active'}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Road Tender Official Details */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <FileText className="w-4 h-4 text-indigo-400" /> Government Tender Details
+        {/* Tender Details */}
+        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-xl space-y-3">
+          <div className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+            <FileText className="w-4 h-4 text-zinc-300" /> Work Contract Summary
           </div>
 
           <h3 className="text-sm font-bold text-white leading-snug">
             {tender?.title}
           </h3>
 
-          <div className="space-y-2 text-xs pt-1">
-            <div className="flex items-center justify-between text-slate-400 border-b border-slate-800/80 pb-2">
-              <span>Tender ID:</span>
-              <span className="font-mono text-indigo-300 font-bold">{tender?.tender_id}</span>
+          <div className="space-y-2 text-xs font-mono pt-1">
+            <div className="flex items-center justify-between text-zinc-400 border-b border-zinc-900 pb-2">
+              <span>TENDER ID:</span>
+              <span className="text-zinc-200 font-bold">{tender?.tender_id}</span>
             </div>
-            <div className="flex items-center justify-between text-slate-400 border-b border-slate-800/80 pb-2">
-              <span>Department:</span>
-              <span className="text-slate-200 font-semibold">{tender?.organisation}</span>
+            <div className="flex items-center justify-between text-zinc-400 border-b border-zinc-900 pb-2">
+              <span>DEPARTMENT:</span>
+              <span className="text-zinc-200">{tender?.organisation}</span>
             </div>
-            <div className="flex items-center justify-between text-slate-400">
-              <span>Location Area:</span>
-              <span className="text-slate-200">{tender?.geo_location?.area_name}</span>
+            <div className="flex items-center justify-between text-zinc-400">
+              <span>AREA:</span>
+              <span className="text-zinc-200">{tender?.geo_location?.area_name}</span>
             </div>
           </div>
         </div>
 
-        {/* Lodge Citizen Complaint Section */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4">
-          <div className="flex items-center gap-2 text-rose-400 font-bold text-sm">
-            <ShieldAlert className="w-5 h-5" />
-            <span>Lodge Official Defect Complaint</span>
+        {/* Lodge Complaint Section */}
+        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-2xl space-y-4">
+          <div className="flex items-center gap-2 text-white font-bold text-sm">
+            <ShieldAlert className="w-5 h-5 text-white" />
+            <span>Lodge Citizen Grievance</span>
           </div>
 
-          <p className="text-xs text-slate-400">
-            Submit an official citizen grievance. Once a tender receives 3 complaints, it automatically triggers a High Priority Escalation Notice to Lucknow government officials and the contractor.
+          <p className="text-xs text-zinc-400">
+            Submit an official record. 3 citizen complaints trigger an automatic High Priority Escalation Notice to officials and contractor.
           </p>
 
           <form onSubmit={handleLodgeComplaint} className="space-y-3">
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase block mb-1">
-                Citizen Defect Remark / Description
+              <label className="text-[10px] font-mono font-bold text-zinc-400 uppercase block mb-1">
+                Citizen Defect Remark
               </label>
               <textarea
                 value={citizenRemark}
                 onChange={(e) => setCitizenRemark(e.target.value)}
-                placeholder="e.g. Hazardous pothole causing severe traffic slowdown and vehicle damage..."
+                placeholder="Describe road damage or hazard..."
                 rows={3}
-                className="w-full bg-slate-950 border border-slate-700 rounded-2xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                className="w-full bg-black border border-zinc-800 rounded-2xl p-3 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-bold text-slate-400 uppercase block mb-1">
-                Your Contact Number (Optional)
+              <label className="text-[10px] font-mono font-bold text-zinc-400 uppercase block mb-1">
+                Contact Number (Optional)
               </label>
               <input
                 type="tel"
                 value={citizenContact}
                 onChange={(e) => setCitizenContact(e.target.value)}
-                placeholder="e.g. +91 98765 43210"
-                className="w-full bg-slate-950 border border-slate-700 rounded-2xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                placeholder="+91 98765 43210"
+                className="w-full bg-black border border-zinc-800 rounded-2xl p-3 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white"
               />
             </div>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-extrabold text-sm py-4 px-6 rounded-2xl shadow-xl shadow-rose-600/30 flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+              className="w-full bg-white hover:bg-zinc-200 text-black font-extrabold text-sm py-4 px-6 rounded-2xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
-                  <RefreshCw className="w-5 h-5 animate-spin" />
-                  <span>Submitting Official Complaint...</span>
+                  <RefreshCw className="w-4 h-4 animate-spin text-black" />
+                  <span>Submitting Grievance...</span>
                 </>
               ) : (
                 <>
-                  <Send className="w-4 h-4" />
+                  <Send className="w-4 h-4 text-black" />
                   <span>Lodge Official Complaint</span>
                 </>
               )}
@@ -381,42 +355,36 @@ function TenderComplaintContent() {
 
           {/* Success Banner */}
           {complaintSuccess && (
-            <div
-              className={`p-4 rounded-2xl border text-xs font-medium space-y-3 animate-in fade-in ${
-                isEscalated
-                  ? 'bg-rose-950/70 border-rose-600 text-rose-200 shadow-lg shadow-rose-900/40'
-                  : 'bg-emerald-950/70 border-emerald-600 text-emerald-200'
-              }`}
-            >
+            <div className="p-4 rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100 text-xs font-mono space-y-3 animate-in fade-in">
               <div className="flex items-center gap-2 font-bold text-sm">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                <span>Grievance Registered Successfully!</span>
+                <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
+                <span>Grievance Registered Successfully</span>
               </div>
 
               {complaintSuccess.escalationNotice ? (
                 <div className="space-y-2">
-                  <div className="p-3 bg-rose-900/50 rounded-xl border border-rose-500/40 text-rose-100 font-semibold text-[11px] leading-relaxed">
-                    🚨 <strong>OFFICIAL ESCALATION NOTICE:</strong> Threshold reached ({liveCount}/3 Complaints)! This tender has been escalated to HIGH PRIORITY for immediate intervention by {tender?.organisation} and {tender?.contractor_name}.
+                  <div className="p-3 bg-black rounded-xl border border-zinc-800 text-zinc-200 text-[11px] leading-relaxed">
+                    OFFICIAL ESCALATION NOTICE: Threshold reached ({liveCount}/3 Complaints). Escalated to HIGH PRIORITY for immediate intervention by {tender?.organisation} and {tender?.contractor_name}.
                   </div>
                   <Link
                     href="/escalated"
-                    className="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
+                    className="w-full py-2.5 px-4 rounded-xl bg-white text-black font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
                   >
                     <span>View Priority Escalation Board</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 text-black" />
                   </Link>
                 </div>
               ) : (
-                <div className="text-[11px] text-slate-300">
-                  Complaint ID: <strong>{complaintSuccess.tenderId}</strong>. Current Total: <strong>{liveCount}/3</strong> complaints needed for high priority automatic escalation.
+                <div className="text-[11px] text-zinc-400">
+                  Total logged complaints: <strong>{liveCount}/3</strong> needed for automatic high priority escalation notice.
                 </div>
               )}
             </div>
           )}
 
           {errorMsg && (
-            <div className="bg-rose-950/80 border border-rose-800 text-rose-300 p-3 rounded-xl flex items-center gap-2 text-xs">
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="bg-zinc-900 border border-zinc-800 text-zinc-300 p-3 rounded-xl flex items-center gap-2 text-xs font-mono">
+              <AlertCircle className="w-4 h-4 text-white shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
@@ -430,9 +398,9 @@ export default function TenderComplaintPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-4">
-          <RefreshCw className="w-8 h-8 text-indigo-500 animate-spin mb-3" />
-          <p className="text-sm font-semibold text-slate-300">Loading...</p>
+        <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
+          <RefreshCw className="w-6 h-6 text-white animate-spin mb-3" />
+          <p className="text-xs font-mono text-zinc-400">Loading...</p>
         </div>
       }
     >

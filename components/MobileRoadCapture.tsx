@@ -5,16 +5,12 @@ import { useRouter } from 'next/navigation';
 import {
   Camera,
   MapPin,
-  Sparkles,
   Download,
   AlertCircle,
   CheckCircle2,
   RefreshCw,
   X,
   Compass,
-  Layers,
-  ArrowRight,
-  ShieldCheck,
   Smartphone
 } from 'lucide-react';
 
@@ -138,7 +134,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
       }
     } catch (err: any) {
       console.warn('MediaDevices camera access failed, falling back to native file input:', err);
-      // Fallback: trigger standard mobile file capture
       if (fileInputRef.current) {
         fileInputRef.current.click();
       }
@@ -154,7 +149,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
     setIsCameraOpen(false);
   }, [stream]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (stream) {
@@ -163,7 +157,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
     };
   }, [stream]);
 
-  // Toggle Camera Facing Mode
   const toggleFacingMode = () => {
     const newMode = facingMode === 'environment' ? 'user' : 'environment';
     setFacingMode(newMode);
@@ -201,26 +194,24 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Draw video frame
     ctx.drawImage(video, 0, 0, width, height);
 
-    // Add Geotag & Timestamp Stamp Overlay
+    // Monochromatic stamp overlay
     const padding = Math.max(16, width * 0.02);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
     ctx.fillRect(0, height - 70, width, 70);
 
-    ctx.fillStyle = '#10B981'; // emerald
-    ctx.font = `bold ${Math.max(16, Math.floor(width * 0.022))}px sans-serif`;
-    ctx.fillText(`📍 GPS: ${lat}°N, ${lng}°E | ${selectedPresetName}`, padding, height - 42);
-
     ctx.fillStyle = '#FFFFFF';
+    ctx.font = `bold ${Math.max(16, Math.floor(width * 0.022))}px sans-serif`;
+    ctx.fillText(`GPS: ${lat}°N, ${lng}°E | ${selectedPresetName}`, padding, height - 42);
+
+    ctx.fillStyle = '#A1A1AA';
     ctx.font = `${Math.max(13, Math.floor(width * 0.018))}px sans-serif`;
-    ctx.fillText(`TIMESTAMP: ${new Date().toLocaleString()} | RD ACCREDITED INSPECTION`, padding, height - 18);
+    ctx.fillText(`TIMESTAMP: ${new Date().toLocaleString()} | MONOCHROME INSPECTION`, padding, height - 18);
 
     const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
     setCapturedImage(dataUrl);
 
-    // Convert to File
     canvas.toBlob((blob) => {
       if (blob) {
         const file = new File([blob], `road_defect_${Date.now()}.jpg`, { type: 'image/jpeg' });
@@ -228,17 +219,11 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
       }
     }, 'image/jpeg');
 
-    // Auto-save & download to device camera roll
     saveAndDownloadPhoto(dataUrl, lat, lng);
-
-    // Close viewfinder modal
     stopCamera();
-
-    // Trigger AI Detection automatically
     processAIDetection(canvas, dataUrl);
   };
 
-  // Handle native file input (fallback or gallery upload)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -246,7 +231,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
       const url = URL.createObjectURL(file);
       setCapturedImage(url);
 
-      // Auto-save download copy
       const reader = new FileReader();
       reader.onload = (event) => {
         const dataUrl = event.target?.result as string;
@@ -255,13 +239,10 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
         }
       };
       reader.readAsDataURL(file);
-
-      // Trigger AI Detection
       runAnalysisWithFile(file);
     }
   };
 
-  // Process AI Detection from snapshot canvas
   const processAIDetection = async (canvas: HTMLCanvasElement, dataUrl: string) => {
     setIsAnalyzing(true);
     setErrorMsg(null);
@@ -289,7 +270,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
           setErrorMsg(data.message || data.error || 'Failed to detect road tender.');
           setIsAnalyzing(false);
         } else {
-          // Store report in sessionStorage for next page transition
           if (typeof window !== 'undefined') {
             sessionStorage.setItem('current_defect_report', JSON.stringify(data.report));
             sessionStorage.setItem('current_defect_image', dataUrl);
@@ -299,7 +279,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
             onAnalysisComplete(data.report);
           }
 
-          // Transition to the dedicated Tender & Complaint page
           const tenderId = data.report?.matchResult?.matchedTender?.tender_id;
           if (tenderId) {
             router.push(`/tender-complaint?tenderId=${encodeURIComponent(tenderId)}`);
@@ -314,7 +293,6 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
     }, 'image/jpeg');
   };
 
-  // Run analysis with raw File
   const runAnalysisWithFile = async (file: File) => {
     setIsAnalyzing(true);
     setErrorMsg(null);
@@ -359,8 +337,7 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto">
-      {/* Hidden native input for fallback / direct camera access on iOS & Android */}
+    <div className="w-full max-w-lg mx-auto font-sans">
       <input
         ref={fileInputRef}
         type="file"
@@ -370,47 +347,43 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
         className="hidden"
       />
 
-      {/* Main Mobile Card */}
-      <div className="bg-slate-900/95 border border-slate-800 rounded-3xl p-5 md:p-6 shadow-2xl backdrop-blur-xl relative overflow-hidden space-y-5">
-        {/* Glow ambient accent */}
-        <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16"></div>
-
+      {/* Main Monochromatic Mobile Card */}
+      <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 md:p-6 shadow-2xl space-y-5">
         {/* Top Status Bar */}
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-3.5">
+        <div className="flex items-center justify-between border-b border-zinc-800/80 pb-3.5">
           <div className="flex items-center gap-2">
-            <span className="flex h-2.5 w-2.5 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            <span className="h-2 w-2 rounded-full bg-white animate-pulse"></span>
+            <span className="text-xs font-mono font-medium text-zinc-300 uppercase tracking-wide">
+              AI CONTRACTOR SYSTEM
             </span>
-            <span className="text-xs font-semibold text-slate-300">AI Contractor Detection Ready</span>
           </div>
 
           <button
             onClick={fetchCurrentLocation}
             disabled={isLocating}
-            className="flex items-center gap-1.5 text-[11px] font-medium bg-slate-800/80 hover:bg-slate-700 text-indigo-300 px-2.5 py-1 rounded-full border border-slate-700 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 text-[11px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-3 py-1 rounded-full border border-zinc-800 transition-all cursor-pointer"
             title="Auto-fetch GPS"
           >
-            <Compass className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin text-indigo-400' : 'text-indigo-400'}`} />
+            <Compass className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin text-zinc-300' : 'text-zinc-400'}`} />
             <span>{isLocating ? 'Locating...' : 'Auto GPS'}</span>
           </button>
         </div>
 
-        {/* Hero Interactive Photo Trigger Area */}
+        {/* Hero Photo Trigger Area */}
         <div className="relative group">
           {capturedImage ? (
-            <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 aspect-4/3 flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden border border-zinc-800 bg-black aspect-4/3 flex items-center justify-center">
               <img
                 src={capturedImage}
                 alt="Captured Road Defect"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover grayscale opacity-90 contrast-125"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent flex flex-col justify-end p-4">
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end p-4">
                 <div className="flex items-center justify-between text-xs text-white font-medium">
-                  <span className="flex items-center gap-1.5 text-emerald-400">
-                    <CheckCircle2 className="w-4 h-4" /> Captured & Saved
+                  <span className="flex items-center gap-1.5 text-zinc-200 font-mono">
+                    <CheckCircle2 className="w-4 h-4 text-white" /> CAPTURED & SAVED
                   </span>
-                  <span className="font-mono text-[11px] text-slate-300">
+                  <span className="font-mono text-[11px] text-zinc-400">
                     {lat}°N, {lng}°E
                   </span>
                 </div>
@@ -419,51 +392,49 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
           ) : (
             <div
               onClick={() => startCamera('environment')}
-              className="relative rounded-2xl border-2 border-dashed border-indigo-500/40 hover:border-indigo-400 bg-gradient-to-b from-indigo-950/20 to-slate-950/60 p-8 text-center cursor-pointer transition-all duration-300 hover:shadow-indigo-500/10 hover:shadow-xl group active:scale-[0.99]"
+              className="relative rounded-2xl border border-dashed border-zinc-700 hover:border-white bg-zinc-900/60 p-8 text-center cursor-pointer transition-all duration-200 group active:scale-[0.99]"
             >
-              <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-600/40 group-hover:scale-110 transition-transform duration-300 text-white mb-3">
-                <Camera className="w-8 h-8" />
+              <div className="w-14 h-14 rounded-2xl bg-white text-black flex items-center justify-center mx-auto shadow-md group-hover:scale-105 transition-transform duration-200 mb-3">
+                <Camera className="w-7 h-7" />
               </div>
               <h3 className="text-base font-bold text-white tracking-tight">
-                Tap to Capture Road Photo
+                Capture Road Photograph
               </h3>
-              <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
-                Opens camera, saves photo to camera roll, and auto-detects accountable contractor via AI
+              <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto">
+                Opens camera, saves photo to camera roll, and matches tender via AI
               </p>
             </div>
           )}
         </div>
 
-        {/* Primary Action Button (Mobile-First CTA) */}
+        {/* Primary Monochromatic Action Buttons */}
         <div className="space-y-2.5">
           <button
             onClick={() => startCamera('environment')}
             disabled={isAnalyzing}
-            className="w-full bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 hover:from-indigo-500 hover:to-indigo-500 text-white font-extrabold text-sm py-4 px-6 rounded-2xl shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+            className="w-full bg-white hover:bg-zinc-200 text-black font-extrabold text-sm py-4 px-6 rounded-2xl shadow-md flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer"
           >
             {isAnalyzing ? (
               <>
-                <RefreshCw className="w-5 h-5 animate-spin" />
-                <span>Running AI Detection & Tender Match...</span>
+                <RefreshCw className="w-5 h-5 animate-spin text-black" />
+                <span>Processing AI Tender Match...</span>
               </>
             ) : (
               <>
-                <Camera className="w-5 h-5" />
-                <span>Capture Photograph of Road</span>
-                <Sparkles className="w-4 h-4 text-amber-300 animate-pulse ml-1" />
+                <Camera className="w-5 h-5 text-black" />
+                <span>Capture Road Photo</span>
               </>
             )}
           </button>
 
-          {/* Quick upload from gallery button */}
           <div className="flex gap-2">
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isAnalyzing}
-              className="flex-1 bg-slate-800 hover:bg-slate-700/80 text-slate-300 hover:text-white text-xs font-semibold py-2.5 px-3 rounded-xl border border-slate-700 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              className="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold py-2.5 px-3 rounded-xl border border-zinc-800 transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <Smartphone className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Choose from Device Gallery</span>
+              <Smartphone className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Gallery Upload</span>
             </button>
 
             {capturedImage && (
@@ -472,7 +443,7 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
                   setCapturedImage(null);
                   setCapturedFile(null);
                 }}
-                className="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white px-3 py-2.5 rounded-xl text-xs font-medium border border-slate-700 cursor-pointer"
+                className="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white px-3.5 py-2.5 rounded-xl text-xs font-medium border border-zinc-800 cursor-pointer"
               >
                 Reset
               </button>
@@ -480,45 +451,43 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
           </div>
         </div>
 
-        {/* Camera Roll Saved Toast Notification */}
+        {/* Notification Toast */}
         {downloadSuccess && (
-          <div className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 p-3 rounded-xl flex items-center gap-2.5 text-xs animate-in fade-in slide-in-from-top-2">
-            <Download className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="bg-zinc-900 border border-zinc-700 text-zinc-200 p-3 rounded-xl flex items-center gap-2.5 text-xs animate-in fade-in">
+            <Download className="w-4 h-4 text-white shrink-0" />
             <span>
-              <strong>Saved to Camera Roll:</strong> Stamped geotagged defect photo has been downloaded to your device storage.
+              <strong>Camera Roll:</strong> Photo downloaded to device storage with GPS stamp.
             </span>
           </div>
         )}
 
-        {/* Error Alert */}
         {errorMsg && (
-          <div className="bg-rose-950/70 border border-rose-800/80 text-rose-300 p-3 rounded-xl flex items-center gap-2.5 text-xs animate-in fade-in">
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+          <div className="bg-zinc-900 border border-zinc-700 text-zinc-300 p-3 rounded-xl flex items-center gap-2.5 text-xs">
+            <AlertCircle className="w-4 h-4 text-white shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        {/* GPS Coordinates & Road Presets Selector */}
-        <div className="pt-2 border-t border-slate-800/80 space-y-3">
+        {/* GPS Coordinates & Presets */}
+        <div className="pt-2 border-t border-zinc-800 space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-indigo-400" /> Geolocation Coordinates
+            <label className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-zinc-300" /> GPS Location
             </label>
-            <span className="text-[11px] text-indigo-400 font-medium">
+            <span className="text-[11px] font-mono text-zinc-400">
               {selectedPresetName}
             </span>
           </div>
 
-          {/* Preset Chips */}
           <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
             {PRESET_LOCATIONS.map((preset, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSelectPreset(preset)}
-                className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-[11px] font-semibold transition-all shrink-0 border cursor-pointer ${
+                className={`whitespace-nowrap px-3 py-1.5 rounded-xl text-[11px] font-medium transition-all shrink-0 border cursor-pointer ${
                   selectedPresetName === preset.name
-                    ? 'bg-indigo-600 text-white border-indigo-500 shadow-md shadow-indigo-600/30'
-                    : 'bg-slate-950 text-slate-400 hover:text-slate-200 border-slate-800 hover:border-slate-700'
+                    ? 'bg-white text-black border-white font-bold'
+                    : 'bg-black text-zinc-400 hover:text-white border-zinc-800 hover:border-zinc-700'
                 }`}
               >
                 {preset.name}
@@ -526,93 +495,79 @@ export default function MobileRoadCapture({ onAnalysisComplete }: MobileRoadCapt
             ))}
           </div>
 
-          {/* Coordinate Inputs */}
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <span className="text-[10px] text-slate-500 font-mono">LAT (°N)</span>
+              <span className="text-[10px] text-zinc-500 font-mono">LATITUDE</span>
               <input
                 type="number"
                 step="0.00001"
                 value={lat}
                 onChange={(e) => setLat(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-black border border-zinc-800 rounded-xl px-2.5 py-1.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-white"
               />
             </div>
             <div>
-              <span className="text-[10px] text-slate-500 font-mono">LNG (°E)</span>
+              <span className="text-[10px] text-zinc-500 font-mono">LONGITUDE</span>
               <input
                 type="number"
                 step="0.00001"
                 value={lng}
                 onChange={(e) => setLng(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-black border border-zinc-800 rounded-xl px-2.5 py-1.5 text-xs font-mono text-zinc-200 focus:outline-none focus:border-white"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Fullscreen Live Camera Viewfinder Modal */}
+      {/* Fullscreen Camera Modal */}
       {isCameraOpen && (
         <div className="fixed inset-0 z-50 bg-black flex flex-col justify-between">
-          {/* Top Camera Controls */}
-          <div className="p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black/80 to-transparent">
+          <div className="p-4 flex items-center justify-between z-10 bg-gradient-to-b from-black to-transparent">
             <button
               onClick={stopCamera}
-              className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center backdrop-blur-md active:scale-95 cursor-pointer"
+              className="w-10 h-10 rounded-full bg-zinc-900 text-white flex items-center justify-center border border-zinc-800 cursor-pointer"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
 
-            <div className="text-center">
-              <div className="text-xs font-bold text-white tracking-wide">LIVE ROAD SCANNER</div>
-              <div className="text-[10px] text-emerald-400 font-mono">
+            <div className="text-center font-mono">
+              <div className="text-xs font-bold text-white tracking-widest uppercase">CAMERA SCANNER</div>
+              <div className="text-[10px] text-zinc-400">
                 {lat}°N, {lng}°E
               </div>
             </div>
 
             <button
               onClick={toggleFacingMode}
-              className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center backdrop-blur-md active:scale-95 cursor-pointer"
-              title="Switch Camera"
+              className="w-10 h-10 rounded-full bg-zinc-900 text-white flex items-center justify-center border border-zinc-800 cursor-pointer"
             >
-              <RefreshCw className="w-5 h-5" />
+              <RefreshCw className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Video Element Viewfinder with Target Crosshairs */}
           <div className="relative flex-1 flex items-center justify-center overflow-hidden bg-black">
             <video
               ref={videoRef}
               playsInline
               autoPlay
               muted
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover grayscale contrast-125"
             />
-
-            {/* Road inspection viewfinder guidelines */}
-            <div className="absolute inset-x-8 inset-y-16 border-2 border-dashed border-indigo-400/50 rounded-2xl pointer-events-none flex items-center justify-center">
-              <div className="text-[11px] font-bold text-indigo-300/80 bg-black/50 px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
-                Center Road Defect In Frame
+            <div className="absolute inset-x-8 inset-y-16 border border-zinc-500/50 rounded-2xl pointer-events-none flex items-center justify-center">
+              <div className="text-[11px] font-mono font-bold text-zinc-300 bg-black/80 px-3 py-1 rounded-full uppercase tracking-widest border border-zinc-700">
+                ALIGN ROAD DEFECT
               </div>
             </div>
           </div>
 
-          {/* Bottom Shutter Action Bar */}
-          <div className="p-6 bg-gradient-to-t from-black/90 via-black/70 to-transparent flex flex-col items-center gap-4 z-10">
-            <div className="text-xs text-slate-300 font-medium">
-              Tap shutter to capture & auto-save to camera roll
-            </div>
-
-            <div className="flex items-center justify-center gap-8 w-full">
-              {/* Shutter Button */}
-              <button
-                onClick={takeSnapshot}
-                className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center active:scale-90 transition-transform bg-white/20 backdrop-blur-md cursor-pointer"
-              >
-                <div className="w-14 h-14 rounded-full bg-rose-500 hover:bg-rose-400 transition-colors shadow-lg shadow-rose-500/50"></div>
-              </button>
-            </div>
+          <div className="p-6 bg-black flex flex-col items-center gap-4 z-10 border-t border-zinc-900">
+            <button
+              onClick={takeSnapshot}
+              className="w-18 h-18 rounded-full border-2 border-white p-1 flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
+            >
+              <div className="w-14 h-14 rounded-full bg-white"></div>
+            </button>
           </div>
         </div>
       )}
