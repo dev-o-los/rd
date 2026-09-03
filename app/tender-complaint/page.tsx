@@ -13,8 +13,14 @@ import {
   ShieldAlert,
   Building2,
   RefreshCw,
-  ArrowRight
+  ArrowRight,
+  MapPin,
+  Eye,
+  EyeOff,
+  Printer,
+  Sparkles
 } from 'lucide-react';
+import { DetectedPothole } from '@/lib/potholeDetector';
 
 function TenderComplaintContent() {
   const searchParams = useSearchParams();
@@ -25,6 +31,7 @@ function TenderComplaintContent() {
   const [capturedPhotoUrl, setCapturedPhotoUrl] = useState<string | null>(null);
   const [tender, setTender] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAiBoxes, setShowAiBoxes] = useState(true);
 
   // Complaint Form State
   const [citizenRemark, setCitizenRemark] = useState('');
@@ -130,6 +137,15 @@ function TenderComplaintContent() {
     }
   };
 
+  const handlePrintNotice = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
+
+  const diagnostics = report?.potholeDiagnostics;
+  const geocoded = report?.geocodedLocation;
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center p-4">
@@ -145,7 +161,7 @@ function TenderComplaintContent() {
         <div className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300">
           <AlertCircle className="w-7 h-7" />
         </div>
-        <h2 className="text-base font-bold text-white">No Matching Tender Found</h2>
+        <h2 className="text-base font-bold text-white">No Matching Road Tender Found</h2>
         <p className="text-xs text-zinc-400">
           The defect coordinates did not match any active government road tender in the database.
         </p>
@@ -162,7 +178,7 @@ function TenderComplaintContent() {
   return (
     <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-white selection:text-black pb-12">
       {/* Top Navigation */}
-      <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-zinc-800 py-3.5 px-4">
+      <header className="sticky top-0 z-40 bg-black/90 backdrop-blur-md border-b border-zinc-800 py-3.5 px-4 print:hidden">
         <div className="max-w-md mx-auto flex items-center justify-between">
           <Link
             href="/"
@@ -174,7 +190,7 @@ function TenderComplaintContent() {
 
           <span className="text-xs font-mono font-bold tracking-wider uppercase text-white flex items-center gap-1.5">
             <ShieldAlert className="w-4 h-4 text-zinc-300" />
-            Contractor Profile
+            Contractor Legal Notice
           </span>
 
           <Link
@@ -188,7 +204,7 @@ function TenderComplaintContent() {
 
       {/* Main Content */}
       <main className="max-w-md mx-auto px-4 pt-4 space-y-4">
-        {/* Defect Preview Card */}
+        {/* Defect Preview Card with AI Bounding Boxes */}
         <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-4 shadow-2xl space-y-3">
           <div className="flex items-center justify-between text-xs">
             <span className="flex items-center gap-1.5 font-mono text-zinc-200 font-bold">
@@ -196,7 +212,7 @@ function TenderComplaintContent() {
             </span>
             {report?.matchResult?.distanceMeters !== undefined && (
               <span className="font-mono text-[11px] bg-zinc-900 px-2.5 py-1 rounded-full border border-zinc-800 text-zinc-400">
-                {report.matchResult.distanceMeters}m away
+                {report.matchResult.distanceMeters}m from centerline
               </span>
             )}
           </div>
@@ -206,8 +222,44 @@ function TenderComplaintContent() {
               <img
                 src={capturedPhotoUrl}
                 alt="Captured Road Defect"
-                className="w-full h-full object-cover grayscale opacity-90 contrast-125"
+                className="w-full h-full object-cover grayscale contrast-125"
               />
+
+              {/* Overlaid AI Boxes */}
+              {showAiBoxes && diagnostics?.detectedPotholes && (
+                <div className="absolute inset-0 pointer-events-none">
+                  {diagnostics.detectedPotholes.map((p: DetectedPothole, idx: number) => {
+                    const [ymin, xmin, ymax, xmax] = p.box;
+                    return (
+                      <div
+                        key={p.id}
+                        style={{
+                          top: `${ymin}%`,
+                          left: `${xmin}%`,
+                          width: `${xmax - xmin}%`,
+                          height: `${ymax - ymin}%`,
+                        }}
+                        className="absolute border-2 border-white bg-white/10 rounded"
+                      >
+                        <span className="absolute -top-4 left-0 bg-black text-[9px] font-mono text-white px-1 rounded">
+                          #{idx + 1} ({p.confidence}%)
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {diagnostics && (
+                <button
+                  type="button"
+                  onClick={() => setShowAiBoxes(!showAiBoxes)}
+                  className="absolute top-2 right-2 bg-black/80 px-2 py-0.5 rounded-full text-[10px] font-mono text-white flex items-center gap-1 border border-zinc-700 pointer-events-auto"
+                >
+                  {showAiBoxes ? <Eye className="w-3 h-3 text-emerald-400" /> : <EyeOff className="w-3 h-3 text-zinc-400" />}
+                  <span>{showAiBoxes ? 'AI Boxes' : 'Raw'}</span>
+                </button>
+              )}
             </div>
           )}
 
@@ -231,6 +283,19 @@ function TenderComplaintContent() {
             </div>
           )}
         </div>
+
+        {/* Reverse Geocoded Ground Location */}
+        {geocoded && (
+          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-4 shadow-xl space-y-1.5 font-mono">
+            <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-zinc-300" /> Exact Ground Location
+            </div>
+            <div className="text-xs font-bold text-white">{geocoded.roadName}</div>
+            <div className="text-[11px] text-zinc-400">
+              {geocoded.locality} • {geocoded.ward} • {geocoded.city}
+            </div>
+          </div>
+        )}
 
         {/* Accountable Contractor Profile Card */}
         <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-2xl space-y-4">
@@ -256,15 +321,15 @@ function TenderComplaintContent() {
 
           <div className="grid grid-cols-2 gap-2 text-xs pt-1 font-mono">
             <div className="bg-zinc-900/60 p-3 rounded-2xl border border-zinc-800">
-              <div className="text-[10px] text-zinc-500">BUDGET</div>
+              <div className="text-[10px] text-zinc-500 uppercase">BUDGET</div>
               <div className="text-sm font-bold text-white mt-0.5">
                 ₹{((tender?.budget_inr || 0) / 100000).toFixed(2)} Lakhs
               </div>
             </div>
             <div className="bg-zinc-900/60 p-3 rounded-2xl border border-zinc-800">
-              <div className="text-[10px] text-zinc-500">STATUS</div>
+              <div className="text-[10px] text-zinc-500 uppercase">STATUS / DLP</div>
               <div className="text-xs font-bold text-zinc-300 mt-1 truncate">
-                {tender?.status || 'Active'}
+                Defect Liability Active
               </div>
             </div>
           </div>
@@ -297,10 +362,10 @@ function TenderComplaintContent() {
         </div>
 
         {/* Lodge Complaint Section */}
-        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-2xl space-y-4">
+        <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-2xl space-y-4 print:hidden">
           <div className="flex items-center gap-2 text-white font-bold text-sm">
             <ShieldAlert className="w-5 h-5 text-white" />
-            <span>Lodge Citizen Grievance</span>
+            <span>Lodge Official Citizen Grievance</span>
           </div>
 
           <p className="text-xs text-zinc-400">
@@ -352,6 +417,16 @@ function TenderComplaintContent() {
               )}
             </button>
           </form>
+
+          {/* Print Notice Action */}
+          <button
+            type="button"
+            onClick={handlePrintNotice}
+            className="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-mono py-2.5 px-4 rounded-xl border border-zinc-800 flex items-center justify-center gap-2 transition-all cursor-pointer"
+          >
+            <Printer className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Print Official Defect Notice for Submission</span>
+          </button>
 
           {/* Success Banner */}
           {complaintSuccess && (

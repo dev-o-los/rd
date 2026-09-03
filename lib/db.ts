@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { RoadTender, MatchResult } from './tenderMatcher';
 import { PriorityAssessmentResult } from './priorityEngine';
+import { PavementDiagnostics, GeocodedLocation } from './potholeDetector';
 
 export interface DefectReport {
   id: string;
@@ -16,6 +17,8 @@ export interface DefectReport {
   defectWidthCm?: number;
   matchResult: MatchResult;
   priorityAssessment: PriorityAssessmentResult;
+  potholeDiagnostics?: PavementDiagnostics;
+  geocodedLocation?: GeocodedLocation;
   status: 'REPORTED' | 'NOTICE_ISSUED' | 'IN_PROGRESS' | 'RESOLVED';
 }
 
@@ -111,7 +114,11 @@ export function getAllTenders(): RoadTender[] {
 export function saveTender(tender: RoadTender): RoadTender {
   const tenders = getAllTenders();
   tenders.unshift(tender);
-  fs.writeFileSync(TENDERS_FILE_PATH, JSON.stringify({ road_tenders: tenders }, null, 2), 'utf-8');
+  try {
+    fs.writeFileSync(TENDERS_FILE_PATH, JSON.stringify({ road_tenders: tenders }, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('Read-only environment or file write error, kept in memory:', err);
+  }
   return tender;
 }
 

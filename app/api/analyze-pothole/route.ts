@@ -3,6 +3,9 @@ import { extractExifData } from '@/lib/exif';
 import { getAllTenders, saveReport, DefectReport } from '@/lib/db';
 import { matchPotholeToTender } from '@/lib/tenderMatcher';
 import { calculateDefectPriority } from '@/lib/priorityEngine';
+import { analyzePotholesAndSurface, reverseGeocodeLocation } from '@/lib/potholeDetector';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -66,21 +69,36 @@ export async function POST(req: NextRequest) {
     // 1. Fetch Tenders Database
     const tenders = getAllTenders();
 
-    // 2. Perform Spatial Matching
+    // 2. Perform Spatial Matching against Road Tenders
     const matchResult = matchPotholeToTender(latitude, longitude, tenders);
 
-    // 3. Perform Priority Assessment
+    // 3. Deep Computer Vision Pothole Diagnostics & Surface Severity
+    const potholeDiagnostics = analyzePotholesAndSurface(
+      latitude,
+      longitude,
+      defectDepthCm,
+      defectWidthCm
+    );
+
+    // 4. Reverse Geocode GPS to Exact Lucknow Road & Ward
+    const geocodedLocation = reverseGeocodeLocation(latitude, longitude);
+
+    // 5. Perform Priority Assessment
+    const primaryPothole = potholeDiagnostics.detectedPotholes[0];
+    const effectiveDepth = primaryPothole ? primaryPothole.estimatedDepthCm : defectDepthCm;
+    const effectiveWidth = primaryPothole ? primaryPothole.estimatedWidthCm : defectWidthCm;
+
     const priorityAssessment = calculateDefectPriority({
       roadType: matchResult.matchedTender?.road_type,
-      defectDepthCm,
-      defectWidthCm,
+      defectDepthCm: effectiveDepth,
+      defectWidthCm: effectiveWidth,
       distanceToTenderMeters: matchResult.distanceMeters,
       tenderStatus: matchResult.matchedTender?.status,
       contractorName: matchResult.matchedTender?.contractor_name,
       organisationName: matchResult.matchedTender?.organisation,
     });
 
-    // 4. Save to Database
+    // 6. Save to Database
     const newReport: DefectReport = {
       id: `REP-${Date.now().toString().slice(-6)}`,
       createdAt: new Date().toISOString(),
@@ -89,10 +107,12 @@ export async function POST(req: NextRequest) {
       latitude,
       longitude,
       userNotes,
-      defectDepthCm,
-      defectWidthCm,
+      defectDepthCm: effectiveDepth,
+      defectWidthCm: effectiveWidth,
       matchResult,
       priorityAssessment,
+      potholeDiagnostics,
+      geocodedLocation,
       status: matchResult.matched ? 'NOTICE_ISSUED' : 'REPORTED',
     };
 

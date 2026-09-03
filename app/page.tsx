@@ -1,14 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import MobileRoadCapture from '@/components/MobileRoadCapture';
-import PotholeAnalyzer from '@/components/PotholeAnalyzer';
-import { Camera, ShieldAlert, ArrowRight, Smartphone, SlidersHorizontal } from 'lucide-react';
+import { ShieldAlert, ArrowRight } from 'lucide-react';
 
 export default function Home() {
-  const [activeMode, setActiveMode] = useState<'mobile_camera' | 'advanced_analyzer'>('mobile_camera');
-
   return (
     <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-white selection:text-black">
       {/* Black & White Premium Header */}
@@ -26,7 +23,7 @@ export default function Home() {
                 </span>
               </h1>
               <p className="text-[11px] text-zinc-400">
-                Monochromatic geotagged road defect detection & contractor accountability
+                Pothole computer vision detection & contractor legal accountability
               </p>
             </div>
           </div>
@@ -42,51 +39,14 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Minimalist Segment Control / Mode Switcher */}
-      <div className="max-w-md mx-auto w-full px-4 pt-6 pb-2">
-        <div className="bg-zinc-900/90 p-1 rounded-2xl border border-zinc-800 flex items-center gap-1 text-xs">
-          <button
-            onClick={() => setActiveMode('mobile_camera')}
-            className={`flex-1 py-2.5 px-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-              activeMode === 'mobile_camera'
-                ? 'bg-white text-black shadow-sm font-bold'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            <Smartphone className="w-4 h-4" />
-            <span>Mobile Camera</span>
-          </button>
-
-          <button
-            onClick={() => setActiveMode('advanced_analyzer')}
-            className={`flex-1 py-2.5 px-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
-              activeMode === 'advanced_analyzer'
-                ? 'bg-white text-black shadow-sm font-bold'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            <span>Manual Analyzer</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-4 md:py-6">
-        {activeMode === 'mobile_camera' ? (
-          <div className="space-y-4 animate-in fade-in duration-200">
-            <MobileRoadCapture />
-          </div>
-        ) : (
-          <div className="animate-in fade-in duration-200">
-            <PotholeAnalyzer />
-          </div>
-        )}
+      {/* Main Content Area: Simplified, direct, clean */}
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 md:py-8 flex flex-col justify-center">
+        <MobileRoadCapture />
       </main>
 
       {/* Minimalist Footer */}
       <footer className="border-t border-zinc-900 bg-black py-4 text-center text-xs text-zinc-500 font-mono tracking-tight">
-        RD SYSTEM • BLACK & WHITE CONTRACTOR ACCOUNTABILITY PLATFORM
+        RD SYSTEM • ROAD DEFECT & CONTRACTOR ACCOUNTABILITY PLATFORM
       </footer>
     </div>
   );

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAllTenders, saveTender } from '@/lib/db';
 import { RoadTender } from '@/lib/tenderMatcher';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const tenders = getAllTenders();
   return NextResponse.json({
