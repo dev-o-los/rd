@@ -688,43 +688,107 @@ export default function MobileRoadCapture() {
               </div>
 
               {/* 4. Lodge a Complaint Section */}
-              <div className="space-y-3 pt-2">
-                <div className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider">
-                  4. Lodge Official Complaint Against Contractor
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs font-mono font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <Send className="w-3.5 h-3.5 text-white" />
+                    <span>4. Lodge Official Citizen Grievance</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-zinc-400">
+                    Threshold: 3 Complaints = Escalation
+                  </span>
+                </div>
+
+                {/* Complaint Progress Meter */}
+                <div className="p-3.5 bg-black rounded-2xl border border-zinc-800 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-mono">
+                    <span className="text-zinc-400">Escalation Progress:</span>
+                    <span className="font-bold text-white">
+                      {liveComplaintCount} / 3 Registered
+                    </span>
+                  </div>
+                  <div className="w-full bg-zinc-900 rounded-full h-2 overflow-hidden border border-zinc-800">
+                    <div
+                      className={`h-full transition-all duration-500 rounded-full ${
+                        liveComplaintCount >= 3 ? 'bg-rose-500 w-full' : liveComplaintCount === 2 ? 'bg-amber-400 w-2/3' : 'bg-white w-1/3'
+                      }`}
+                    />
+                  </div>
+                  <div className="text-[10px] font-mono text-zinc-500 flex justify-between">
+                    <span>1: Logged</span>
+                    <span>2: Warning</span>
+                    <span className={liveComplaintCount >= 3 ? 'text-rose-400 font-bold' : ''}>3: Vigilance Notice</span>
+                  </div>
+                </div>
+
+                {/* Quick Hazard Selector Chips */}
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-mono text-zinc-500 uppercase">Quick Defect Hazard Tags:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      'Rim & Tire Damage Hazard',
+                      'Two-Wheeler Skid Risk',
+                      'Waterlogged Deep Crater',
+                      'Pedestrian Safety Risk'
+                    ].map((hazard, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          const current = citizenRemark.trim();
+                          if (!current) {
+                            setCitizenRemark(hazard);
+                          } else if (!current.includes(hazard)) {
+                            setCitizenRemark(`${current}, ${hazard}`);
+                          }
+                        }}
+                        className="text-[11px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white px-2.5 py-1 rounded-lg border border-zinc-800 transition-all cursor-pointer"
+                      >
+                        + {hazard}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <form onSubmit={handleLodgeComplaint} className="space-y-3">
-                  <textarea
-                    value={citizenRemark}
-                    onChange={(e) => setCitizenRemark(e.target.value)}
-                    placeholder="Describe defect or hazard (optional)..."
-                    rows={2}
-                    className="w-full bg-black border border-zinc-800 rounded-2xl p-3 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white font-mono"
-                  />
+                  <div>
+                    <label className="text-[10px] font-mono text-zinc-500 uppercase block mb-1">
+                      Citizen Remarks (Optional)
+                    </label>
+                    <textarea
+                      value={citizenRemark}
+                      onChange={(e) => setCitizenRemark(e.target.value)}
+                      placeholder="e.g. Dangerous pothole near sector turn causing severe vehicle damage..."
+                      rows={2}
+                      className="w-full bg-black border border-zinc-800 rounded-2xl p-3 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white font-mono"
+                    />
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <input
-                      type="tel"
-                      value={citizenContact}
-                      onChange={(e) => setCitizenContact(e.target.value)}
-                      placeholder="Contact number (optional)"
-                      className="w-full bg-black border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white font-mono"
-                    />
+                    <div>
+                      <input
+                        type="tel"
+                        value={citizenContact}
+                        onChange={(e) => setCitizenContact(e.target.value)}
+                        placeholder="Mobile for status SMS (optional)"
+                        className="w-full bg-black border border-zinc-800 rounded-xl px-3 py-3 text-xs text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-white font-mono"
+                      />
+                    </div>
 
                     <button
                       type="submit"
                       disabled={isLODGINGComplaint}
-                      className="w-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                      className="w-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 active:scale-[0.98]"
                     >
                       {isLODGINGComplaint ? (
                         <>
                           <RefreshCw className="w-4 h-4 animate-spin text-black" />
-                          <span>Filing Complaint...</span>
+                          <span>Submitting Official Grievance...</span>
                         </>
                       ) : (
                         <>
                           <Send className="w-4 h-4 text-black" />
-                          <span>Lodge Official Complaint</span>
+                          <span>Submit Official Complaint</span>
                         </>
                       )}
                     </button>
@@ -733,20 +797,38 @@ export default function MobileRoadCapture() {
 
                 {/* Complaint Notice / Escalation Banner */}
                 {complaintNotice && (
-                  <div className="p-4 rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100 text-xs font-mono space-y-2 animate-in fade-in">
-                    <div className="flex items-center gap-2 font-bold text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-white shrink-0" />
-                      <span>Complaint Registered Successfully</span>
+                  <div className="p-4 rounded-2xl border border-zinc-700 bg-zinc-900 text-zinc-100 text-xs font-mono space-y-3 animate-in fade-in">
+                    <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                      <span className="flex items-center gap-1.5 font-bold text-white">
+                        <CheckCircle2 className="w-4 h-4 text-white" />
+                        <span>Grievance Registered</span>
+                      </span>
+                      <span className="text-[10px] text-zinc-400">
+                        REF: UP-PWD-{Date.now().toString().slice(-5)}
+                      </span>
                     </div>
-                    <div className="text-zinc-300 leading-relaxed">{complaintNotice}</div>
-                    {isEscalated && (
+
+                    <div className="text-zinc-300 leading-relaxed text-[11px]">{complaintNotice}</div>
+
+                    <div className="flex flex-col sm:flex-row gap-2 pt-1">
                       <Link
-                        href="/escalated"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-white underline pt-1"
+                        href={`/tender-complaint?tenderId=${encodeURIComponent(tender.tender_id)}`}
+                        className="flex-1 py-2 px-3 bg-zinc-950 hover:bg-black text-zinc-200 border border-zinc-800 rounded-xl text-center text-xs font-bold transition-all flex items-center justify-center gap-1.5"
                       >
-                        View High Priority Government Escalation Board <ArrowRight className="w-3.5 h-3.5" />
+                        <span>Print Legal Notice</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
-                    )}
+
+                      {isEscalated && (
+                        <Link
+                          href="/escalated"
+                          className="flex-1 py-2 px-3 bg-white text-black rounded-xl text-center text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                          <span>View Escalation Board</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 import {
   ShieldAlert,
   ArrowLeft,
@@ -45,43 +46,8 @@ export default function EscalatedBoardPage() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-white selection:text-black flex flex-col">
-      {/* Header Bar */}
-      <header className="border-b border-zinc-800 bg-black/90 backdrop-blur-md py-4 sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-all flex items-center gap-1.5 text-xs font-semibold"
-            >
-              <ArrowLeft className="w-4 h-4" /> Back to Scanner
-            </Link>
-
-            <div className="h-4 w-px bg-zinc-800"></div>
-
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-white text-black flex items-center justify-center font-bold text-sm shadow-sm">
-                <ShieldAlert className="w-4 h-4 text-black" />
-              </div>
-              <div>
-                <h1 className="text-base font-extrabold text-white tracking-tight">
-                  Priority Escalation Board
-                </h1>
-                <p className="text-[11px] text-zinc-400 font-mono">
-                  Government Action Tracker & Citizen Complaint Ledger
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <button
-            onClick={fetchEscalatedTenders}
-            className="p-2 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs rounded-xl border border-zinc-800 flex items-center gap-1.5 transition-all cursor-pointer"
-            title="Refresh Board"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
-          </button>
-        </div>
-      </header>
+      {/* Responsive Unified Navbar */}
+      <Navbar />
 
       {/* Main Content */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8 space-y-6">
