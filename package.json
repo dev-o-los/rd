@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "crawl:tenders": "node scripts/crawl-etenders.mjs"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "exifreader": "^4.42.0",
     "lucide-react": "^1.31.0",
     "next": "16.3.0",

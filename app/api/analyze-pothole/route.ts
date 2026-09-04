@@ -19,23 +19,34 @@ export async function POST(req: NextRequest) {
     let imageName = 'uploaded_image.jpg';
     let exifInfo: any = null;
 
+    let isRoadValid = true;
+
     if (contentType.includes('multipart/form-data')) {
       const formData = await req.formData();
       const file = formData.get('image') as File | null;
       const customLat = formData.get('latitude') as string | null;
       const customLng = formData.get('longitude') as string | null;
+      const isRoadValidParam = formData.get('isRoadValid') as string | null;
+      if (isRoadValidParam === 'false') {
+        isRoadValid = false;
+      }
+
       userNotes = (formData.get('userNotes') as string) || '';
       if (formData.get('defectDepthCm')) defectDepthCm = parseFloat(formData.get('defectDepthCm') as string);
       if (formData.get('defectWidthCm')) defectWidthCm = parseFloat(formData.get('defectWidthCm') as string);
 
       if (file) {
         imageName = file.name;
-        const arrayBuffer = await file.arrayBuffer();
-        exifInfo = await extractExifData(arrayBuffer);
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          exifInfo = await extractExifData(arrayBuffer);
 
-        if (exifInfo.hasGps && exifInfo.latitude !== null && exifInfo.longitude !== null) {
-          latitude = exifInfo.latitude;
-          longitude = exifInfo.longitude;
+          if (exifInfo.hasGps && exifInfo.latitude !== null && exifInfo.longitude !== null) {
+            latitude = exifInfo.latitude;
+            longitude = exifInfo.longitude;
+          }
+        } catch (exifErr) {
+          console.warn('Could not read EXIF data:', exifErr);
         }
       }
 
@@ -45,13 +56,40 @@ export async function POST(req: NextRequest) {
         longitude = parseFloat(customLng);
       }
     } else {
-      const body = await req.json();
+      let body: any = {};
+      try {
+        body = await req.json();
+      } catch {
+        return NextResponse.json(
+          {
+            error: 'Invalid JSON Format',
+            message: 'Malformed request payload. Please ensure valid form data or JSON is submitted.',
+          },
+          { status: 400 }
+        );
+      }
+
       latitude = body.latitude ? parseFloat(body.latitude) : null;
       longitude = body.longitude ? parseFloat(body.longitude) : null;
       userNotes = body.userNotes || '';
       defectDepthCm = body.defectDepthCm ? parseFloat(body.defectDepthCm) : 8;
       defectWidthCm = body.defectWidthCm ? parseFloat(body.defectWidthCm) : 40;
       imageName = body.imageName || 'api_submission.jpg';
+      if (body.isRoadValid === false) {
+        isRoadValid = false;
+      }
+    }
+
+    // Check road recognition validation
+    if (!isRoadValid) {
+      return NextResponse.json(
+        {
+          error: 'Unrecognized Road Image',
+          message:
+            'This is not a recognized image of a road. Please upload the proper image of the road potholes only, so that it can be detected and tenders can be seen',
+        },
+        { status: 400 }
+      );
     }
 
     if (latitude === null || longitude === null || isNaN(latitude) || isNaN(longitude)) {

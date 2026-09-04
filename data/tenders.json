@@ -19,9 +19,18 @@
         "longitude": 80.8842,
         "coverage_radius_meters": 1200,
         "route_waypoints": [
-          {"lat": 26.7720, "lng": 80.8810},
-          {"lat": 26.7765, "lng": 80.8842},
-          {"lat": 26.7810, "lng": 80.8885}
+          {
+            "lat": 26.772,
+            "lng": 80.881
+          },
+          {
+            "lat": 26.7765,
+            "lng": 80.8842
+          },
+          {
+            "lat": 26.781,
+            "lng": 80.8885
+          }
         ]
       }
     },
@@ -44,9 +53,18 @@
         "longitude": 81.0185,
         "coverage_radius_meters": 800,
         "route_waypoints": [
-          {"lat": 26.8375, "lng": 81.0160},
-          {"lat": 26.8392, "lng": 81.0185},
-          {"lat": 26.8410, "lng": 81.0210}
+          {
+            "lat": 26.8375,
+            "lng": 81.016
+          },
+          {
+            "lat": 26.8392,
+            "lng": 81.0185
+          },
+          {
+            "lat": 26.841,
+            "lng": 81.021
+          }
         ]
       }
     },
@@ -69,9 +87,18 @@
         "longitude": 81.0102,
         "coverage_radius_meters": 1500,
         "route_waypoints": [
-          {"lat": 26.8420, "lng": 81.0050},
-          {"lat": 26.8465, "lng": 81.0102},
-          {"lat": 26.8510, "lng": 81.0160}
+          {
+            "lat": 26.842,
+            "lng": 81.005
+          },
+          {
+            "lat": 26.8465,
+            "lng": 81.0102
+          },
+          {
+            "lat": 26.851,
+            "lng": 81.016
+          }
         ]
       }
     },
@@ -90,13 +117,22 @@
       "road_type": "Internal Colony Road",
       "geo_location": {
         "area_name": "Vinit Khand-6, Gomti Nagar, Lucknow",
-        "latitude": 26.8580,
+        "latitude": 26.858,
         "longitude": 81.0015,
         "coverage_radius_meters": 600,
         "route_waypoints": [
-          {"lat": 26.8565, "lng": 81.0000},
-          {"lat": 26.8580, "lng": 81.0015},
-          {"lat": 26.8595, "lng": 81.0030}
+          {
+            "lat": 26.8565,
+            "lng": 81
+          },
+          {
+            "lat": 26.858,
+            "lng": 81.0015
+          },
+          {
+            "lat": 26.8595,
+            "lng": 81.003
+          }
         ]
       }
     },
@@ -116,12 +152,21 @@
       "geo_location": {
         "area_name": "Varun Vihar Sector-2 (18m Road), Lucknow",
         "latitude": 26.8125,
-        "longitude": 80.9320,
+        "longitude": 80.932,
         "coverage_radius_meters": 900,
         "route_waypoints": [
-          {"lat": 26.8105, "lng": 80.9300},
-          {"lat": 26.8125, "lng": 80.9320},
-          {"lat": 26.8145, "lng": 80.9340}
+          {
+            "lat": 26.8105,
+            "lng": 80.93
+          },
+          {
+            "lat": 26.8125,
+            "lng": 80.932
+          },
+          {
+            "lat": 26.8145,
+            "lng": 80.934
+          }
         ]
       }
     },
@@ -140,13 +185,22 @@
       "road_type": "30m Main Arterial Avenue",
       "geo_location": {
         "area_name": "Varun Vihar Sector 1-2 Dividing Road, Lucknow",
-        "latitude": 26.8140,
-        "longitude": 80.9360,
+        "latitude": 26.814,
+        "longitude": 80.936,
         "coverage_radius_meters": 1200,
         "route_waypoints": [
-          {"lat": 26.8115, "lng": 80.9330},
-          {"lat": 26.8140, "lng": 80.9360},
-          {"lat": 26.8170, "lng": 80.9390}
+          {
+            "lat": 26.8115,
+            "lng": 80.933
+          },
+          {
+            "lat": 26.814,
+            "lng": 80.936
+          },
+          {
+            "lat": 26.817,
+            "lng": 80.939
+          }
         ]
       }
     },
@@ -169,9 +223,18 @@
         "longitude": 80.9385,
         "coverage_radius_meters": 1000,
         "route_waypoints": [
-          {"lat": 26.8150, "lng": 80.9360},
-          {"lat": 26.8175, "lng": 80.9385},
-          {"lat": 26.8200, "lng": 80.9410}
+          {
+            "lat": 26.815,
+            "lng": 80.936
+          },
+          {
+            "lat": 26.8175,
+            "lng": 80.9385
+          },
+          {
+            "lat": 26.82,
+            "lng": 80.941
+          }
         ]
       }
     },
@@ -190,13 +253,22 @@
       "road_type": "30m Sector Corridor",
       "geo_location": {
         "area_name": "Varun Vihar Sector 2-3-4 Central Road, Lucknow",
-        "latitude": 26.8110,
-        "longitude": 80.9410,
+        "latitude": 26.811,
+        "longitude": 80.941,
         "coverage_radius_meters": 1100,
         "route_waypoints": [
-          {"lat": 26.8090, "lng": 80.9380},
-          {"lat": 26.8110, "lng": 80.9410},
-          {"lat": 26.8130, "lng": 80.9440}
+          {
+            "lat": 26.809,
+            "lng": 80.938
+          },
+          {
+            "lat": 26.811,
+            "lng": 80.941
+          },
+          {
+            "lat": 26.813,
+            "lng": 80.944
+          }
         ]
       }
     },
@@ -215,13 +287,22 @@
       "road_type": "18m Internal Sector Road",
       "geo_location": {
         "area_name": "Varun Vihar Sector-4, Lucknow",
-        "latitude": 26.8080,
+        "latitude": 26.808,
         "longitude": 80.9435,
         "coverage_radius_meters": 750,
         "route_waypoints": [
-          {"lat": 26.8065, "lng": 80.9420},
-          {"lat": 26.8080, "lng": 80.9435},
-          {"lat": 26.8095, "lng": 80.9450}
+          {
+            "lat": 26.8065,
+            "lng": 80.942
+          },
+          {
+            "lat": 26.808,
+            "lng": 80.9435
+          },
+          {
+            "lat": 26.8095,
+            "lng": 80.945
+          }
         ]
       }
     },
@@ -240,13 +321,22 @@
       "road_type": "30m Sector Boundary Road",
       "geo_location": {
         "area_name": "Varun Vihar Sector 3-6 Road, Lucknow",
-        "latitude": 26.8050,
-        "longitude": 80.9470,
+        "latitude": 26.805,
+        "longitude": 80.947,
         "coverage_radius_meters": 1000,
         "route_waypoints": [
-          {"lat": 26.8030, "lng": 80.9450},
-          {"lat": 26.8050, "lng": 80.9470},
-          {"lat": 26.8070, "lng": 80.9490}
+          {
+            "lat": 26.803,
+            "lng": 80.945
+          },
+          {
+            "lat": 26.805,
+            "lng": 80.947
+          },
+          {
+            "lat": 26.807,
+            "lng": 80.949
+          }
         ]
       }
     },
@@ -265,13 +355,22 @@
       "road_type": "18m Sector Road with Culvert",
       "geo_location": {
         "area_name": "Varun Vihar Sector-5, Lucknow",
-        "latitude": 26.8020,
-        "longitude": 80.9510,
+        "latitude": 26.802,
+        "longitude": 80.951,
         "coverage_radius_meters": 800,
         "route_waypoints": [
-          {"lat": 26.8005, "lng": 80.9495},
-          {"lat": 26.8020, "lng": 80.9510},
-          {"lat": 26.8035, "lng": 80.9525}
+          {
+            "lat": 26.8005,
+            "lng": 80.9495
+          },
+          {
+            "lat": 26.802,
+            "lng": 80.951
+          },
+          {
+            "lat": 26.8035,
+            "lng": 80.9525
+          }
         ]
       }
     },
@@ -290,13 +389,22 @@
       "road_type": "Gramin Internal Road",
       "geo_location": {
         "area_name": "Sugamau (Lavkush Nagar), Lucknow",
-        "latitude": 26.8950,
-        "longitude": 81.0250,
+        "latitude": 26.895,
+        "longitude": 81.025,
         "coverage_radius_meters": 1300,
         "route_waypoints": [
-          {"lat": 26.8920, "lng": 81.0220},
-          {"lat": 26.8950, "lng": 81.0250},
-          {"lat": 26.8980, "lng": 81.0280}
+          {
+            "lat": 26.892,
+            "lng": 81.022
+          },
+          {
+            "lat": 26.895,
+            "lng": 81.025
+          },
+          {
+            "lat": 26.898,
+            "lng": 81.028
+          }
         ]
       }
     },
@@ -315,13 +423,22 @@
       "road_type": "Residential Connector Road",
       "geo_location": {
         "area_name": "Mansarovar Yojna (Underpass to Deepshikha Apt), Lucknow",
-        "latitude": 26.7680,
-        "longitude": 80.8950,
+        "latitude": 26.768,
+        "longitude": 80.895,
         "coverage_radius_meters": 750,
         "route_waypoints": [
-          {"lat": 26.7660, "lng": 80.8930},
-          {"lat": 26.7680, "lng": 80.8950},
-          {"lat": 26.7700, "lng": 80.8970}
+          {
+            "lat": 26.766,
+            "lng": 80.893
+          },
+          {
+            "lat": 26.768,
+            "lng": 80.895
+          },
+          {
+            "lat": 26.77,
+            "lng": 80.897
+          }
         ]
       }
     },
@@ -340,13 +457,22 @@
       "road_type": "Municipal CC Lane",
       "geo_location": {
         "area_name": "Fish Phatak Colony, Ward 99 Acharya Narendra Dev, Lucknow",
-        "latitude": 26.8620,
-        "longitude": 80.9150,
+        "latitude": 26.862,
+        "longitude": 80.915,
         "coverage_radius_meters": 500,
         "route_waypoints": [
-          {"lat": 26.8610, "lng": 80.9140},
-          {"lat": 26.8620, "lng": 80.9150},
-          {"lat": 26.8630, "lng": 80.9160}
+          {
+            "lat": 26.861,
+            "lng": 80.914
+          },
+          {
+            "lat": 26.862,
+            "lng": 80.915
+          },
+          {
+            "lat": 26.863,
+            "lng": 80.916
+          }
         ]
       }
     },
@@ -365,13 +491,22 @@
       "road_type": "State Highway / Ward Road",
       "geo_location": {
         "area_name": "Hardoi Road (Mallahi Tola I, Ward 85), Lucknow",
-        "latitude": 26.8730,
-        "longitude": 80.8920,
+        "latitude": 26.873,
+        "longitude": 80.892,
         "coverage_radius_meters": 700,
         "route_waypoints": [
-          {"lat": 26.8710, "lng": 80.8900},
-          {"lat": 26.8730, "lng": 80.8920},
-          {"lat": 26.8750, "lng": 80.8940}
+          {
+            "lat": 26.871,
+            "lng": 80.89
+          },
+          {
+            "lat": 26.873,
+            "lng": 80.892
+          },
+          {
+            "lat": 26.875,
+            "lng": 80.894
+          }
         ]
       }
     },
@@ -390,13 +525,22 @@
       "road_type": "Ward Road",
       "geo_location": {
         "area_name": "Indira Priyadarshini Ward 40 (East Lucknow), Lucknow",
-        "latitude": 26.8780,
-        "longitude": 80.9750,
+        "latitude": 26.878,
+        "longitude": 80.975,
         "coverage_radius_meters": 600,
         "route_waypoints": [
-          {"lat": 26.8765, "lng": 80.9735},
-          {"lat": 26.8780, "lng": 80.9750},
-          {"lat": 26.8795, "lng": 80.9765}
+          {
+            "lat": 26.8765,
+            "lng": 80.9735
+          },
+          {
+            "lat": 26.878,
+            "lng": 80.975
+          },
+          {
+            "lat": 26.8795,
+            "lng": 80.9765
+          }
         ]
       }
     },
@@ -415,13 +559,22 @@
       "road_type": "Suburban Link Road",
       "geo_location": {
         "area_name": "New Nandi Vihar, Chinhat, Lucknow",
-        "latitude": 26.8890,
-        "longitude": 81.0560,
+        "latitude": 26.889,
+        "longitude": 81.056,
         "coverage_radius_meters": 800,
         "route_waypoints": [
-          {"lat": 26.8870, "lng": 81.0540},
-          {"lat": 26.8890, "lng": 81.0560},
-          {"lat": 26.8910, "lng": 81.0580}
+          {
+            "lat": 26.887,
+            "lng": 81.054
+          },
+          {
+            "lat": 26.889,
+            "lng": 81.056
+          },
+          {
+            "lat": 26.891,
+            "lng": 81.058
+          }
         ]
       }
     },
@@ -440,13 +593,22 @@
       "road_type": "Gram Panchayat Road",
       "geo_location": {
         "area_name": "Tadkheda Barwan Kalan, Kakori, Lucknow",
-        "latitude": 26.8810,
-        "longitude": 80.7950,
+        "latitude": 26.881,
+        "longitude": 80.795,
         "coverage_radius_meters": 900,
         "route_waypoints": [
-          {"lat": 26.8790, "lng": 80.7930},
-          {"lat": 26.8810, "lng": 80.7950},
-          {"lat": 26.8830, "lng": 80.7970}
+          {
+            "lat": 26.879,
+            "lng": 80.793
+          },
+          {
+            "lat": 26.881,
+            "lng": 80.795
+          },
+          {
+            "lat": 26.883,
+            "lng": 80.797
+          }
         ]
       }
     },
@@ -465,13 +627,22 @@
       "road_type": "Major Industrial Highway",
       "geo_location": {
         "area_name": "Mohan Road (Nadarganj to TS Mishra Bridge), Lucknow",
-        "latitude": 26.7890,
-        "longitude": 80.8460,
+        "latitude": 26.789,
+        "longitude": 80.846,
         "coverage_radius_meters": 2000,
         "route_waypoints": [
-          {"lat": 26.7820, "lng": 80.8400},
-          {"lat": 26.7890, "lng": 80.8460},
-          {"lat": 26.7960, "lng": 80.8520}
+          {
+            "lat": 26.782,
+            "lng": 80.84
+          },
+          {
+            "lat": 26.789,
+            "lng": 80.846
+          },
+          {
+            "lat": 26.796,
+            "lng": 80.852
+          }
         ]
       }
     },
@@ -490,13 +661,226 @@
       "road_type": "Mandi Link Road",
       "geo_location": {
         "area_name": "Khanipur Link Road (0.40 Km), Lucknow",
-        "latitude": 26.8320,
-        "longitude": 80.8750,
+        "latitude": 26.832,
+        "longitude": 80.875,
         "coverage_radius_meters": 500,
         "route_waypoints": [
-          {"lat": 26.8310, "lng": 80.8740},
-          {"lat": 26.8320, "lng": 80.8750},
-          {"lat": 26.8330, "lng": 80.8760}
+          {
+            "lat": 26.831,
+            "lng": 80.874
+          },
+          {
+            "lat": 26.832,
+            "lng": 80.875
+          },
+          {
+            "lat": 26.833,
+            "lng": 80.876
+          }
+        ]
+      }
+    },
+    {
+      "s_no": 1,
+      "e_published_date": "2026-07-14T08:20:00.000Z",
+      "closing_date": "2026-09-08T06:30:00.000Z",
+      "opening_date": "2026-09-08T07:00:00.000Z",
+      "title": "Erection and Dismantling of Pantoon Bridge on Mahrajganj Drain in Gram Sabha Kachnawan Block Deeh in Distt Raebareli",
+      "reference_number": "2026-27 Dt. 22-06-2026",
+      "tender_id": "2026_CEUCZ_1169066_3",
+      "organisation": "Chief Engineer PWD Central Zone,Lucknow||S.E. UPPWD Lucknow||Construction Division-1, Reabarelli",
+      "contractor_name": "Ganga-Sai Pontoon Bridge & Infra Works",
+      "budget_inr": 2850000,
+      "status": "Active Contract",
+      "road_type": "Bridge / Pontoon Approach Road",
+      "geo_location": {
+        "area_name": "Mahrajganj Drain (Gram Sabha Kachnawan, Block Deeh), Raebareli",
+        "latitude": 26.165,
+        "longitude": 81.38,
+        "coverage_radius_meters": 1200,
+        "route_waypoints": [
+          {
+            "lat": 26.162,
+            "lng": 81.377
+          },
+          {
+            "lat": 26.165,
+            "lng": 81.38
+          },
+          {
+            "lat": 26.168,
+            "lng": 81.383
+          }
+        ]
+      }
+    },
+    {
+      "s_no": 2,
+      "e_published_date": "2026-07-14T08:10:00.000Z",
+      "closing_date": "2026-09-08T06:30:00.000Z",
+      "opening_date": "2026-09-08T07:00:00.000Z",
+      "title": "Erection and Dismantling of Pantoon Bridge on Sai River in Gram Sabha Poorab Nayan Block Deeh in Distt Raebareli",
+      "reference_number": "2026-27 Dt. 22-06-2026",
+      "tender_id": "2026_CEUCZ_1169066_2",
+      "organisation": "Chief Engineer PWD Central Zone,Lucknow||S.E. UPPWD Lucknow||Construction Division-1, Reabarelli",
+      "contractor_name": "Sai Riverine Engineering & Pontoon Works",
+      "budget_inr": 3100000,
+      "status": "Active Contract",
+      "road_type": "Bridge / Pontoon Approach Road",
+      "geo_location": {
+        "area_name": "Sai River (Gram Sabha Poorab Nayan, Block Deeh), Raebareli",
+        "latitude": 26.185,
+        "longitude": 81.34,
+        "coverage_radius_meters": 1100,
+        "route_waypoints": [
+          {
+            "lat": 26.182,
+            "lng": 81.337
+          },
+          {
+            "lat": 26.185,
+            "lng": 81.34
+          },
+          {
+            "lat": 26.188,
+            "lng": 81.343
+          }
+        ]
+      }
+    },
+    {
+      "s_no": 3,
+      "e_published_date": "2026-07-14T08:00:00.000Z",
+      "closing_date": "2026-09-08T06:30:00.000Z",
+      "opening_date": "2026-09-08T07:00:00.000Z",
+      "title": "Erection and Dismantling of Pantoon Bridge on Bhurkusha Ghat of Ganga River in Block Deenshah Gaura Vidhansabha Unchahar of Distt Raebareli",
+      "reference_number": "2026-27 Dt. 22-06-2026",
+      "tender_id": "2026_CEUCZ_1169066_1",
+      "organisation": "Chief Engineer PWD Central Zone,Lucknow||S.E. UPPWD Lucknow||Construction Division-1, Reabarelli",
+      "contractor_name": "Unchahar Ghat Construction & Infra Consortium",
+      "budget_inr": 3600000,
+      "status": "Active Contract",
+      "road_type": "Bridge / Pontoon Approach Road",
+      "geo_location": {
+        "area_name": "Bhurkusha Ghat (Ganga River, Block Deenshah Gaura, Unchahar)",
+        "latitude": 25.925,
+        "longitude": 81.315,
+        "coverage_radius_meters": 1500,
+        "route_waypoints": [
+          {
+            "lat": 25.921,
+            "lng": 81.31
+          },
+          {
+            "lat": 25.925,
+            "lng": 81.315
+          },
+          {
+            "lat": 25.929,
+            "lng": 81.32
+          }
+        ]
+      }
+    },
+    {
+      "s_no": 4,
+      "e_published_date": "2026-07-14T07:30:00.000Z",
+      "closing_date": "2026-09-08T06:30:00.000Z",
+      "opening_date": "2026-09-08T07:00:00.000Z",
+      "title": "Supply of Power Barz/Motor Boat at Sai River in Gram Sabha Poorab Nayan Block Deeh in Distt Raebareli",
+      "reference_number": "2026-27 Dt. 22-06-2026",
+      "tender_id": "2026_CEUCZ_1169035_2",
+      "organisation": "Chief Engineer PWD Central Zone,Lucknow||S.E. UPPWD Lucknow||Construction Division-1, Reabarelli",
+      "contractor_name": "UP Motor Craft & River Logistics Ltd",
+      "budget_inr": 1850000,
+      "status": "Active Contract",
+      "road_type": "River Transit & Ghat Approach",
+      "geo_location": {
+        "area_name": "Sai River Power Barz (Gram Sabha Poorab Nayan), Raebareli",
+        "latitude": 26.1855,
+        "longitude": 81.341,
+        "coverage_radius_meters": 800,
+        "route_waypoints": [
+          {
+            "lat": 26.184,
+            "lng": 81.339
+          },
+          {
+            "lat": 26.1855,
+            "lng": 81.341
+          },
+          {
+            "lat": 26.187,
+            "lng": 81.343
+          }
+        ]
+      }
+    },
+    {
+      "s_no": 5,
+      "e_published_date": "2026-07-14T07:30:00.000Z",
+      "closing_date": "2026-09-08T06:30:00.000Z",
+      "opening_date": "2026-09-08T07:00:00.000Z",
+      "title": "Supply of Power Barz/Motor Boat at Mahrajganj Drain in Gram Sabha Kachnawan Block Deeh in Distt Raebareli",
+      "reference_number": "2026-27 Dt. 22-06-2026",
+      "tender_id": "2026_CEUCZ_1169035_3",
+      "organisation": "Chief Engineer PWD Central Zone,Lucknow||S.E. UPPWD Lucknow||Construction Division-1, Reabarelli",
+      "contractor_name": "Kachnawan Marine & Waterworks Ltd",
+      "budget_inr": 1750000,
+      "status": "Active Contract",
+      "road_type": "River Transit & Ghat Approach",
+      "geo_location": {
+        "area_name": "Mahrajganj Drain Power Barz (Kachnawan, Block Deeh), Raebareli",
+        "latitude": 26.1655,
+        "longitude": 81.381,
+        "coverage_radius_meters": 800,
+        "route_waypoints": [
+          {
+            "lat": 26.164,
+            "lng": 81.379
+          },
+          {
+            "lat": 26.1655,
+            "lng": 81.381
+          },
+          {
+            "lat": 26.167,
+            "lng": 81.383
+          }
+        ]
+      }
+    },
+    {
+      "s_no": 6,
+      "e_published_date": "2026-07-14T07:30:00.000Z",
+      "closing_date": "2026-09-08T06:30:00.000Z",
+      "opening_date": "2026-09-08T07:00:00.000Z",
+      "title": "Supply of Power Barz/Motor Boat at Bhurkusha Ghat of Ganga River in Block Deenshah Gaura Vidhansabha Unchahar of Distt Raebareli",
+      "reference_number": "2026-27 Dt. 22-06-2026",
+      "tender_id": "2026_CEUCZ_1169035_1",
+      "organisation": "Chief Engineer PWD Central Zone,Lucknow||S.E. UPPWD Lucknow||Construction Division-1, Reabarelli",
+      "contractor_name": "Ganga Vessel & Pontoon Transporters",
+      "budget_inr": 2100000,
+      "status": "Active Contract",
+      "road_type": "River Transit & Ghat Approach",
+      "geo_location": {
+        "area_name": "Bhurkusha Ghat Power Barz (Unchahar), Raebareli",
+        "latitude": 25.926,
+        "longitude": 81.316,
+        "coverage_radius_meters": 1000,
+        "route_waypoints": [
+          {
+            "lat": 25.924,
+            "lng": 81.313
+          },
+          {
+            "lat": 25.926,
+            "lng": 81.316
+          },
+          {
+            "lat": 25.928,
+            "lng": 81.319
+          }
         ]
       }
     }

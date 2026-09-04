@@ -21,12 +21,20 @@ import {
 } from 'lucide-react';
 import { DefectReport } from '@/lib/db';
 import { DetectedPothole } from '@/lib/potholeDetector';
+import { classifyRoadImageFromPixels, INVALID_ROAD_MESSAGE } from '@/lib/roadClassifier';
 
 export interface PresetLocation {
   name: string;
   lat: number;
   lng: number;
   area: string;
+  contractorName: string;
+  agency: string;
+  budgetFormatted: string;
+  roadType: string;
+  status: string;
+  tenderId: string;
+  complaintCount: number;
 }
 
 export const PRESET_LOCATIONS: PresetLocation[] = [
@@ -35,30 +43,65 @@ export const PRESET_LOCATIONS: PresetLocation[] = [
     lat: 26.8468,
     lng: 81.0105,
     area: 'Gomti Nagar Vistar Sector-1, Lucknow',
+    contractorName: 'Lucknow Express Highways & Infra Ltd',
+    agency: 'Lucknow Development Authority',
+    budgetFormatted: '₹1.25 Cr',
+    roadType: 'Service Road / Highway Connector',
+    status: 'HIGH PRIORITY ESCALATED (Notice Issued)',
+    tenderId: '2026_LDAUP_1175656_1',
+    complaintCount: 4,
   },
   {
     name: 'Kanpur Road Yojna',
     lat: 26.7768,
     lng: 80.8845,
     area: 'Mragshira Apartment, Kanpur Road, Lucknow',
+    contractorName: 'UP Rajkiya Nirman Nigam & Associates',
+    agency: 'Lucknow Development Authority',
+    budgetFormatted: '₹45.0 Lakhs',
+    roadType: 'Arterial Road',
+    status: 'Active Maintenance',
+    tenderId: '2026_LDAUP_1175282_1',
+    complaintCount: 1,
   },
   {
     name: 'Hardoi Road (Ward 85)',
     lat: 26.8732,
     lng: 80.8922,
     area: 'Mallahi Tola I, Hardoi Road, Lucknow',
+    contractorName: 'Hardoi Road Builders & Co',
+    agency: 'Rural Engineering Department (RED)',
+    budgetFormatted: '₹24.0 Lakhs',
+    roadType: 'State Highway / Ward Road',
+    status: 'Active Contract',
+    tenderId: '2026_REDUP_1174069_4',
+    complaintCount: 0,
   },
   {
     name: 'Mohan Road (Nadarganj)',
     lat: 26.7892,
     lng: 80.8462,
     area: 'Nadarganj to TS Mishra Bridge, Mohan Road',
+    contractorName: 'Mohan Highway Expansion Agency',
+    agency: 'Lucknow Development Authority',
+    budgetFormatted: '₹4.80 Cr',
+    roadType: 'Major Industrial Highway',
+    status: 'Active Widening Work',
+    tenderId: '2026_LDAUP_1173891_1',
+    complaintCount: 0,
   },
   {
     name: 'Chinhat Nandi Vihar',
     lat: 26.8892,
     lng: 81.0562,
     area: 'Chinhat, Lucknow',
+    contractorName: 'Chinhat Roadlines & Developers',
+    agency: 'Rural Engineering Department (RED)',
+    budgetFormatted: '₹19.5 Lakhs',
+    roadType: 'Suburban Link Road',
+    status: 'Active Maintenance',
+    tenderId: '2026_REDUP_1174069_6',
+    complaintCount: 0,
   },
 ];
 
@@ -67,10 +110,12 @@ export default function MobileRoadCapture() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [lat, setLat] = useState<string>('26.8468');
   const [lng, setLng] = useState<string>('81.0105');
-  const [isLocating, setIsLocating] = useState(false);
+  const [gpsStatus, setGpsStatus] = useState<'idle' | 'locating' | 'locked' | 'denied'>('idle');
+  const [gpsNotice, setGpsNotice] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [selectedPresetName, setSelectedPresetName] = useState<string>('Shaheed Path Service Road');
+  const [selectedPreset, setSelectedPreset] = useState<PresetLocation | null>(PRESET_LOCATIONS[0]);
 
   // Webcam modal state (for desktop/secure context)
   const [isWebcamOpen, setIsWebcamOpen] = useState(false);
@@ -104,31 +149,46 @@ export default function MobileRoadCapture() {
 
   // Auto-fetch device GPS on mount
   useEffect(() => {
-    fetchCurrentLocation();
+    fetchCurrentLocation(false);
   }, []);
 
-  const fetchCurrentLocation = () => {
-    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
-      setIsLocating(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLat(position.coords.latitude.toFixed(5));
-          setLng(position.coords.longitude.toFixed(5));
-          setSelectedPresetName('Live Device GPS');
-          setIsLocating(false);
-        },
-        () => {
-          setIsLocating(false);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-      );
+  const fetchCurrentLocation = (isRefresh = false) => {
+    if (typeof window === 'undefined') return;
+    if (!('geolocation' in navigator)) {
+      setGpsStatus('denied');
+      setGpsNotice('GPS unavailable on this device');
+      return;
     }
+
+    setGpsStatus('locating');
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLat(position.coords.latitude.toFixed(5));
+        setLng(position.coords.longitude.toFixed(5));
+        setSelectedPresetName('Live Device GPS');
+        setSelectedPreset(null);
+        setGpsStatus('locked');
+        if (isRefresh) {
+          setGpsNotice('GPS Refreshed');
+          setTimeout(() => setGpsNotice(null), 2500);
+        }
+      },
+      (err) => {
+        console.warn('Geolocation error:', err);
+        setGpsStatus('denied');
+        setGpsNotice('GPS signal not found');
+        setTimeout(() => setGpsNotice(null), 3500);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+    );
   };
 
   const handleSelectPreset = (preset: PresetLocation) => {
     setLat(preset.lat.toFixed(5));
     setLng(preset.lng.toFixed(5));
     setSelectedPresetName(preset.name);
+    setSelectedPreset(preset);
+    setGpsStatus('idle');
     if (analysisReport) {
       setAnalysisReport(null);
       setComplaintNotice(null);
@@ -191,61 +251,141 @@ export default function MobileRoadCapture() {
     openDesktopWebcam('environment');
   };
 
-  // Snapshot from desktop webcam
-  const takeWebcamSnapshot = () => {
-    if (!videoRef.current) return;
-    const video = videoRef.current;
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth || 1280;
-    canvas.height = video.videoHeight || 720;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  // Optimize image dimensions and evaluate road recognition
+  const optimizeAndVerifyImage = async (
+    source: File | HTMLCanvasElement
+  ): Promise<{
+    isRoad: boolean;
+    reason?: string;
+    blob: Blob;
+    displayUrl: string;
+  }> => {
+    return new Promise((resolve, reject) => {
+      const processCanvas = (canvas: HTMLCanvasElement, displayUrl: string) => {
+        try {
+          // 1. Generate 256x256 thumbnail for rapid Computer Vision road evaluation
+          const cvCanvas = document.createElement('canvas');
+          cvCanvas.width = 256;
+          cvCanvas.height = 256;
+          const cvCtx = cvCanvas.getContext('2d');
+          if (!cvCtx) {
+            reject(new Error('Canvas 2D context unavailable'));
+            return;
+          }
+          cvCtx.drawImage(canvas, 0, 0, 256, 256);
+          const imgData = cvCtx.getImageData(0, 0, 256, 256);
 
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-    setCapturedImage(dataUrl);
+          // 2. Classify image with road & pothole recognition engine
+          const classification = classifyRoadImageFromPixels(imgData.data, 256, 256);
 
-    stopWebcam();
+          // 3. Compress main canvas to ~300KB JPEG (eliminates large payload network errors)
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Failed to encode optimized photo'));
+                return;
+              }
+              resolve({
+                isRoad: classification.isRoad,
+                reason: classification.reason,
+                blob,
+                displayUrl,
+              });
+            },
+            'image/jpeg',
+            0.85
+          );
+        } catch (cvErr) {
+          reject(cvErr);
+        }
+      };
 
-    canvas.toBlob((blob) => {
-      if (blob) {
-        const file = new File([blob], `road_photo_${Date.now()}.jpg`, { type: 'image/jpeg' });
-        runAnalysisWithFile(file, dataUrl);
+      if (source instanceof HTMLCanvasElement) {
+        const displayUrl = source.toDataURL('image/jpeg', 0.85);
+        processCanvas(source, displayUrl);
+      } else {
+        const displayUrl = URL.createObjectURL(source);
+        const img = new Image();
+        img.onload = () => {
+          // Downscale high-resolution mobile photos (e.g. 12-48MP) to max 1400px
+          const MAX_DIM = 1400;
+          let w = img.naturalWidth || img.width;
+          let h = img.naturalHeight || img.height;
+
+          if (w > MAX_DIM || h > MAX_DIM) {
+            if (w > h) {
+              h = Math.round((h * MAX_DIM) / w);
+              w = MAX_DIM;
+            } else {
+              w = Math.round((w * MAX_DIM) / h);
+              h = MAX_DIM;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Canvas context unavailable'));
+            return;
+          }
+          ctx.drawImage(img, 0, 0, w, h);
+          processCanvas(canvas, displayUrl);
+        };
+        img.onerror = () => {
+          reject(new Error('Failed to load image for road analysis'));
+        };
+        img.src = displayUrl;
       }
-    }, 'image/jpeg');
+    });
   };
 
-  // Handle Photo Taken via Native Camera or Gallery Upload
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const url = URL.createObjectURL(file);
-      setCapturedImage(url);
-      runAnalysisWithFile(file, url);
-    }
-    e.target.value = '';
-  };
-
-  // Run AI Pothole & Tender Match Analysis
-  const runAnalysisWithFile = async (file: File, displayUrl: string) => {
+  // Run Road Verification & Tender Match Analysis
+  const processAndAnalyzeImage = async (source: File | HTMLCanvasElement) => {
     setIsAnalyzing(true);
     setErrorMsg(null);
     setAnalysisReport(null);
     setComplaintNotice(null);
 
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('latitude', lat);
-    formData.append('longitude', lng);
-    formData.append('userNotes', `Defect captured at ${selectedPresetName}`);
-
     try {
+      // 1. Client-side Image Optimization & Computer Vision Road Verification
+      const processed = await optimizeAndVerifyImage(source);
+      setCapturedImage(processed.displayUrl);
+
+      if (!processed.isRoad) {
+        // Image is not a recognized road or pothole
+        setIsAnalyzing(false);
+        setErrorMsg(INVALID_ROAD_MESSAGE);
+        return;
+      }
+
+      // 2. Submit optimized payload to server
+      const file = new File([processed.blob], `road_defect_${Date.now()}.jpg`, {
+        type: 'image/jpeg',
+      });
+
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('latitude', lat);
+      formData.append('longitude', lng);
+      formData.append('userNotes', `Defect captured at ${selectedPresetName}`);
+      formData.append('isRoadValid', 'true');
+
       const res = await fetch('/api/analyze-pothole', {
         method: 'POST',
         body: formData,
       });
 
-      const data = await res.json();
+      // Safe JSON decoding
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error('Server returned an invalid response format.');
+      }
+
       if (!res.ok || data.error) {
         setErrorMsg(data.message || data.error || 'Failed to analyze road defect.');
       } else {
@@ -265,14 +405,46 @@ export default function MobileRoadCapture() {
 
         if (typeof window !== 'undefined') {
           sessionStorage.setItem('current_defect_report', JSON.stringify(data.report));
-          sessionStorage.setItem('current_defect_image', displayUrl);
+          sessionStorage.setItem('current_defect_image', processed.displayUrl);
         }
       }
     } catch (err: any) {
-      setErrorMsg('Network error: ' + (err.message || String(err)));
+      console.error('Image analysis error:', err);
+      const msg = err.message || String(err);
+      if (msg.includes('JSON') || msg.includes('Unexpected') || msg.includes('token')) {
+        setErrorMsg(
+          'Unable to parse road defect response. Please verify network connection and try again.'
+        );
+      } else {
+        setErrorMsg('Network error: ' + msg);
+      }
     } finally {
       setIsAnalyzing(false);
     }
+  };
+
+  // Snapshot from desktop webcam
+  const takeWebcamSnapshot = () => {
+    if (!videoRef.current) return;
+    const video = videoRef.current;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 1280;
+    canvas.height = video.videoHeight || 720;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    stopWebcam();
+    processAndAnalyzeImage(canvas);
+  };
+
+  // Handle Photo Taken via Native Camera or Gallery Upload
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      processAndAnalyzeImage(file);
+    }
+    e.target.value = '';
   };
 
   // Lodge Official Grievance
@@ -363,24 +535,67 @@ export default function MobileRoadCapture() {
       {/* MAIN CARD */}
       <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-5 sm:p-7 shadow-2xl space-y-6">
         {/* Top Status & GPS Bar */}
-        <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 border-b border-zinc-800/80 pb-4">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="h-2.5 w-2.5 rounded-full bg-white animate-pulse"></span>
             <span className="text-xs font-mono font-bold text-zinc-200 tracking-wider uppercase">
               ROAD TENDER & CONTRACTOR MATCHER
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={fetchCurrentLocation}
-            disabled={isLocating}
-            className="flex items-center gap-1.5 text-[11px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-3 py-1.5 rounded-full border border-zinc-800 transition-all cursor-pointer"
-            title="Auto-detect GPS"
-          >
-            <Compass className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin text-zinc-200' : 'text-zinc-400'}`} />
-            <span>{isLocating ? 'Locating...' : 'Auto GPS'}</span>
-          </button>
+          <div className="flex items-center gap-2 shrink-0 ml-auto">
+            {gpsNotice && (
+              <span className="text-[10px] font-mono text-zinc-400 animate-in fade-in hidden sm:inline">
+                {gpsNotice}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={() => fetchCurrentLocation(gpsStatus === 'locked')}
+              disabled={gpsStatus === 'locating'}
+              className={`flex items-center justify-center gap-1.5 text-[11px] font-mono px-3.5 py-1.5 rounded-full border transition-all shrink-0 min-w-[122px] h-8 select-none ${
+                gpsStatus === 'locked'
+                  ? 'bg-emerald-950/40 hover:bg-emerald-950/70 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.18)] cursor-pointer'
+                  : gpsStatus === 'locating'
+                  ? 'bg-zinc-900 text-zinc-300 border-zinc-700 cursor-wait'
+                  : gpsStatus === 'denied'
+                  ? 'bg-rose-950/30 hover:bg-rose-950/50 text-rose-300 border-rose-800/40 cursor-pointer'
+                  : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border-zinc-800 hover:border-zinc-700 cursor-pointer'
+              }`}
+              title={
+                gpsStatus === 'locked'
+                  ? `Live GPS Active (${lat}°N, ${lng}°E). Click to refresh.`
+                  : gpsStatus === 'locating'
+                  ? 'Acquiring high-accuracy GPS coordinates...'
+                  : 'Auto-detect device GPS coordinates'
+              }
+            >
+              {gpsStatus === 'locating' ? (
+                <>
+                  <Compass className="w-3.5 h-3.5 animate-spin text-zinc-200 shrink-0" />
+                  <span>Locating...</span>
+                </>
+              ) : gpsStatus === 'locked' ? (
+                <>
+                  <span className="relative flex h-2 w-2 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className="font-semibold tracking-tight">GPS Locked</span>
+                </>
+              ) : gpsStatus === 'denied' ? (
+                <>
+                  <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                  <span>GPS Offline</span>
+                </>
+              ) : (
+                <>
+                  <Compass className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                  <span>Auto GPS</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* IMAGE DISPLAY AREA (Shown when photo is captured/uploaded) */}
@@ -517,11 +732,40 @@ export default function MobileRoadCapture() {
           </label>
         </div>
 
-        {/* Error Alert */}
+        {/* Error Alert / Road Verification Notice */}
         {errorMsg && (
-          <div className="bg-zinc-900 border border-zinc-700 text-zinc-200 p-3.5 rounded-2xl flex items-center gap-2.5 text-xs font-mono">
-            <AlertCircle className="w-4 h-4 text-white shrink-0" />
-            <span>{errorMsg}</span>
+          <div
+            className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono animate-in fade-in duration-200 ${
+              errorMsg === INVALID_ROAD_MESSAGE
+                ? 'bg-amber-950/30 border-amber-500/40 text-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.1)]'
+                : 'bg-zinc-900 border-zinc-700 text-zinc-200'
+            }`}
+          >
+            <div className="flex items-start gap-2.5">
+              <AlertCircle
+                className={`w-5 h-5 shrink-0 mt-0.5 ${
+                  errorMsg === INVALID_ROAD_MESSAGE ? 'text-amber-400' : 'text-white'
+                }`}
+              />
+              <div className="space-y-1">
+                <span className="font-semibold block leading-relaxed">{errorMsg}</span>
+                {errorMsg === INVALID_ROAD_MESSAGE && (
+                  <span className="text-[11px] text-zinc-400 block">
+                    Our AI models require asphalt pavement and visible potholes to match with civic road maintenance contracts.
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {errorMsg === INVALID_ROAD_MESSAGE && (
+              <button
+                type="button"
+                onClick={handleResetCapture}
+                className="self-end sm:self-center shrink-0 bg-white hover:bg-zinc-200 text-black font-bold text-[11px] px-3.5 py-1.5 rounded-xl cursor-pointer transition-all active:scale-95"
+              >
+                Try Another Photo
+              </button>
+            )}
           </div>
         )}
 
@@ -536,7 +780,7 @@ export default function MobileRoadCapture() {
             </span>
           </div>
 
-          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+          <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
             {PRESET_LOCATIONS.map((preset, idx) => (
               <button
                 key={idx}
@@ -552,6 +796,73 @@ export default function MobileRoadCapture() {
               </button>
             ))}
           </div>
+
+          {/* Accountable Contractor & Tender Profile Card (Shown when a stretch is selected) */}
+          {selectedPreset && (
+            <div className="mt-2.5 bg-black/85 border border-zinc-800 rounded-2xl p-4 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200 shadow-inner">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/70 pb-2.5">
+                <div>
+                  <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5 text-zinc-300" />
+                    <span>Accountable Road Contractor:</span>
+                  </div>
+                  <div className="text-sm font-extrabold text-white mt-0.5 tracking-tight flex items-center gap-2">
+                    <span>{selectedPreset.contractorName}</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" title="Active Civic Contractor" />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <span
+                    className={`text-[10px] font-mono px-2.5 py-1 rounded-full border ${
+                      selectedPreset.complaintCount >= 3
+                        ? 'bg-rose-950/40 text-rose-300 border-rose-500/40 font-bold'
+                        : selectedPreset.complaintCount > 0
+                        ? 'bg-amber-950/40 text-amber-300 border-amber-500/40 font-bold'
+                        : 'bg-zinc-900 text-zinc-400 border-zinc-800'
+                    }`}
+                  >
+                    {selectedPreset.complaintCount >= 3
+                      ? '🚨 Notice Issued'
+                      : selectedPreset.complaintCount > 0
+                      ? `⚡ ${selectedPreset.complaintCount}/3 Complaints`
+                      : '0 Complaints'}
+                  </span>
+                  <span className="text-[10px] font-mono bg-zinc-900 text-zinc-300 px-2 py-0.5 rounded-md border border-zinc-800">
+                    {selectedPreset.roadType}
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid: Authority, Budget, Lifecycle Status */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-mono">
+                <div className="bg-zinc-900/50 p-2.5 rounded-xl border border-zinc-800/60">
+                  <div className="text-[10px] text-zinc-400 uppercase">Civic Authority</div>
+                  <div className="text-zinc-200 font-semibold mt-0.5 truncate">{selectedPreset.agency}</div>
+                </div>
+                <div className="bg-zinc-900/50 p-2.5 rounded-xl border border-zinc-800/60">
+                  <div className="text-[10px] text-zinc-400 uppercase">Contract Budget</div>
+                  <div className="text-zinc-200 font-semibold mt-0.5">{selectedPreset.budgetFormatted}</div>
+                </div>
+                <div className="col-span-2 sm:col-span-1 bg-zinc-900/50 p-2.5 rounded-xl border border-zinc-800/60">
+                  <div className="text-[10px] text-zinc-400 uppercase">Work Status</div>
+                  <div className="text-zinc-200 font-semibold mt-0.5 truncate">{selectedPreset.status}</div>
+                </div>
+              </div>
+
+              {/* Action Link to Full Tender Profile */}
+              <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1">
+                <span className="truncate max-w-[260px]">Contract ID: {selectedPreset.tenderId}</span>
+                <Link
+                  href={`/tender-complaint?tenderId=${encodeURIComponent(selectedPreset.tenderId)}`}
+                  className="text-white hover:underline flex items-center gap-1 font-bold shrink-0"
+                >
+                  <span>View Contract Details & Lodge Complaint</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

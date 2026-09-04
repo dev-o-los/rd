@@ -134,7 +134,13 @@ export default function PotholeAnalyzer() {
         });
       }
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error('Server returned an unexpected response format.');
+      }
 
       if (!res.ok || data.error) {
         setErrorMsg(data.message || data.error || 'Failed to match road tender.');
@@ -147,7 +153,12 @@ export default function PotholeAnalyzer() {
         }
       }
     } catch (err: any) {
-      setErrorMsg('Network error: ' + (err.message || String(err)));
+      const msg = err.message || String(err);
+      if (msg.includes('JSON') || msg.includes('Unexpected') || msg.includes('token')) {
+        setErrorMsg('Unable to parse road defect response. Please verify network connection and try again.');
+      } else {
+        setErrorMsg('Network error: ' + msg);
+      }
     } finally {
       setIsAnalyzing(false);
     }

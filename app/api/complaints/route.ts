@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { registerComplaint, getEscalatedTenders, COMPLAINT_THRESHOLD } from '@/lib/db';
+import { registerComplaint, getEscalatedTenders, getAllTenders, COMPLAINT_THRESHOLD } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,9 +30,21 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   const escalatedTenders = getEscalatedTenders();
+  const allTenders = getAllTenders();
+
+  const escalatedCount = allTenders.filter(
+    (t) => (t.complaint_count || 0) >= COMPLAINT_THRESHOLD
+  ).length;
+  const nearEscalatedCount = allTenders.filter(
+    (t) => (t.complaint_count || 0) > 0 && (t.complaint_count || 0) < COMPLAINT_THRESHOLD
+  ).length;
+
   return NextResponse.json({
     threshold: COMPLAINT_THRESHOLD,
     totalTracked: escalatedTenders.length,
+    escalatedCount,
+    nearEscalatedCount,
     escalatedTenders,
+    allTenders,
   });
 }
