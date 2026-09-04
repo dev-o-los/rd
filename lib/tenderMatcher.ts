@@ -37,6 +37,7 @@ export interface MatchResult {
     distanceMeters: number;
   }>;
   matchReason: string;
+  dataSource?: 'DATABASE' | 'ETENDER_CRAWLER';
 }
 
 /**

@@ -947,16 +947,24 @@ export default function MobileRoadCapture() {
             </div>
           )}
 
-          {/* 3. Accountable Road Tender & Contractor from Database */}
+          {/* 3. Accountable Road Tender & Contractor from Database or eTender Crawler */}
           {tender ? (
             <div className="space-y-4 border-t border-zinc-800 pt-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                   <Building2 className="w-4 h-4 text-white" /> 3. Responsible Tender & Contractor
                 </div>
-                <span className="px-3 py-1 text-xs font-mono font-bold rounded-full bg-zinc-900 text-zinc-200 border border-zinc-800">
-                  Complaints: {liveComplaintCount} / 3
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-1 text-[10px] font-mono font-bold rounded-full border bg-zinc-900 text-zinc-300 border-zinc-800 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    {analysisReport?.matchResult?.dataSource === 'ETENDER_CRAWLER'
+                      ? 'Live eTender Portal'
+                      : 'Database Match'}
+                  </span>
+                  <span className="px-3 py-1 text-xs font-mono font-bold rounded-full bg-zinc-900 text-zinc-200 border border-zinc-800">
+                    Complaints: {liveComplaintCount} / 3
+                  </span>
+                </div>
               </div>
 
               <div className="bg-black p-5 rounded-2xl border border-zinc-800 space-y-4">

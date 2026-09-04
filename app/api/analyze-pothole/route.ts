@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { extractExifData } from '@/lib/exif';
 import { getAllTenders, saveReport, DefectReport } from '@/lib/db';
 import { matchPotholeToTender } from '@/lib/tenderMatcher';
+import { crawlETenders } from '@/lib/crawler';
 import { calculateDefectPriority } from '@/lib/priorityEngine';
 import { analyzePotholesAndSurface, reverseGeocodeLocation } from '@/lib/potholeDetector';
 
@@ -105,10 +106,39 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Fetch Tenders Database
-    const tenders = getAllTenders();
+    let tenders = getAllTenders();
+    let dataSource: 'DATABASE' | 'ETENDER_CRAWLER' = 'DATABASE';
 
     // 2. Perform Spatial Matching against Road Tenders
-    const matchResult = matchPotholeToTender(latitude, longitude, tenders);
+    let matchResult = matchPotholeToTender(latitude, longitude, tenders);
+
+    // If not matched or database empty, query the live e-tender crawler for newly published tenders
+    if (!matchResult.matched || tenders.length === 0) {
+      try {
+        console.log(`[Analyze Pothole] No direct database match for (${latitude}, ${longitude}). Invoking live e-tender crawler...`);
+        await crawlETenders();
+        tenders = getAllTenders();
+        const liveMatch = matchPotholeToTender(latitude, longitude, tenders);
+        if (liveMatch.matched) {
+          matchResult = liveMatch;
+          dataSource = 'ETENDER_CRAWLER';
+          matchResult.matchReason = `${matchResult.matchReason} (Synchronized live via UP eTender crawler)`;
+        }
+      } catch (crawlErr) {
+        console.warn('[Analyze Pothole] Live crawl fallback failed:', crawlErr);
+      }
+    }
+
+    // Determine data provenance if matched tender originated from live UP e-tender portal
+    if (
+      matchResult.matchedTender?.tender_id?.includes('CEUCZ') ||
+      matchResult.matchedTender?.organisation?.includes('Central Zone') ||
+      matchResult.matchedTender?.organisation?.includes('UPPWD')
+    ) {
+      dataSource = 'ETENDER_CRAWLER';
+    }
+
+    matchResult.dataSource = dataSource;
 
     // 3. Deep Computer Vision Pothole Diagnostics & Surface Severity
     const potholeDiagnostics = analyzePotholesAndSurface(
