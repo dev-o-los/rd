@@ -27,7 +27,7 @@ export default function Navbar() {
           setEscalatedCount(data.totalTracked);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [pathname]);
 
   // Close mobile menu on page navigation
@@ -63,12 +63,11 @@ export default function Navbar() {
           {/* Desktop & Tablet Navigation Links */}
           <nav className="hidden md:flex items-center gap-2">
             <Link
-              href="/"
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
-                pathname === '/'
+              href="/scan"
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${pathname === '/scan'
                   ? 'bg-white text-black shadow-sm'
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
-              }`}
+                }`}
             >
               <Camera className="w-3.5 h-3.5" />
               <span>Camera Scanner</span>
@@ -76,11 +75,10 @@ export default function Navbar() {
 
             <Link
               href="/escalated"
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${
-                pathname === '/escalated'
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${pathname === '/escalated'
                   ? 'bg-white text-black border-white shadow-sm'
                   : 'text-zinc-300 bg-zinc-900/90 hover:bg-zinc-800 border-zinc-800 hover:border-zinc-700'
-              }`}
+                }`}
             >
               <ShieldAlert className="w-3.5 h-3.5 text-zinc-300" />
               <span>Escalation Board</span>
@@ -120,13 +118,12 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-zinc-800 bg-black/95 px-4 pt-3 pb-5 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
           <Link
-            href="/"
+            href="/scan"
             onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-bold transition-all ${
-              pathname === '/'
+            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-bold transition-all ${pathname === '/scan'
                 ? 'bg-white text-black'
                 : 'text-zinc-300 bg-zinc-950 border border-zinc-800/80 hover:bg-zinc-900'
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2.5">
               <Camera className="w-4 h-4" />
@@ -138,11 +135,10 @@ export default function Navbar() {
           <Link
             href="/escalated"
             onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-bold transition-all ${
-              pathname === '/escalated'
+            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-bold transition-all ${pathname === '/escalated'
                 ? 'bg-white text-black'
                 : 'text-zinc-300 bg-zinc-950 border border-zinc-800/80 hover:bg-zinc-900'
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2.5">
               <ShieldAlert className="w-4 h-4" />
