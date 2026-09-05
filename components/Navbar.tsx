@@ -8,9 +8,11 @@ import {
   ShieldAlert,
   Menu,
   X,
-  Building2,
   CheckCircle2,
-  FileText
+  FileSpreadsheet,
+  Compass,
+  Zap,
+  HelpCircle
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -35,78 +37,88 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  const isHome = pathname === '/';
+
   return (
-    <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-zinc-800/90 transition-all">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo & Brand */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center font-black text-sm tracking-wider shadow-sm transition-transform group-hover:scale-105">
+    <header className="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-md border-b border-zinc-800/80 transition-all">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-2">
+          {/* Brand Logo & Title */}
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white text-black flex items-center justify-center font-black text-xs sm:text-sm tracking-wider shadow-sm transition-transform group-hover:scale-105 shrink-0">
               RD
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm sm:text-base text-white tracking-tight">
-                  <span className="hidden sm:inline">Road Tender & Contractor Matcher</span>
-                  <span className="sm:hidden">RD Matcher</span>
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="font-bold text-sm sm:text-base text-zinc-100 tracking-tight whitespace-nowrap">
+                  RoadWatch AI
                 </span>
-                <span className="text-[9px] font-mono font-bold bg-zinc-900 text-zinc-300 border border-zinc-800 px-2 py-0.5 rounded-full">
-                  AI SYSTEM
+                <span className="hidden sm:inline-block text-[9px] font-mono font-bold bg-zinc-900 text-zinc-400 border border-zinc-800 px-1.5 py-0.5 rounded-full">
+                  CIVIC AI
                 </span>
               </div>
-              <span className="text-[10px] text-zinc-400 font-mono hidden sm:inline">
-                Pothole computer vision detection & contractor legal accountability
+              <span className="hidden lg:inline text-[10px] text-zinc-500 font-mono truncate max-w-[280px]">
+                Road Defect & Tender Accountability
               </span>
             </div>
           </Link>
 
-          {/* Desktop & Tablet Navigation Links */}
-          <nav className="hidden md:flex items-center gap-2">
-            <Link
-              href="/scan"
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${pathname === '/scan'
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
-                }`}
+          {/* Desktop & Tablet Navigation Links (md and up) */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs lg:text-sm font-medium text-zinc-400">
+            <a
+              href={isHome ? '#procedure' : '/#procedure'}
+              className="hover:text-white transition-colors"
             >
-              <Camera className="w-3.5 h-3.5" />
-              <span>Camera Scanner</span>
-            </Link>
-
+              How It Works
+            </a>
+            <a
+              href={isHome ? '#features' : '/#features'}
+              className="hover:text-white transition-colors"
+            >
+              Features
+            </a>
+            <a
+              href={isHome ? '#faq' : '/#faq'}
+              className="hover:text-white transition-colors"
+            >
+              FAQ
+            </a>
             <Link
               href="/escalated"
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${pathname === '/escalated'
-                  ? 'bg-white text-black border-white shadow-sm'
-                  : 'text-zinc-300 bg-zinc-900/90 hover:bg-zinc-800 border-zinc-800 hover:border-zinc-700'
-                }`}
+              className={`flex items-center gap-2 transition-colors ${
+                pathname === '/escalated' ? 'text-white font-semibold' : 'hover:text-white'
+              }`}
             >
-              <ShieldAlert className="w-3.5 h-3.5 text-zinc-300" />
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+              </span>
               <span>Escalation Board</span>
-              <span className="bg-black/60 px-1.5 py-0.5 rounded-full text-[10px] font-mono border border-zinc-800 text-zinc-300">
+              <span className="bg-zinc-900 border border-zinc-800 text-zinc-300 text-[10px] font-mono px-1.5 py-0.5 rounded-full">
                 {escalatedCount}
               </span>
             </Link>
           </nav>
 
-          {/* Mobile Right Buttons (Compact Escalation Badge + Hamburger) */}
-          <div className="flex items-center gap-2 md:hidden">
+          {/* Right Action Buttons */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Open Scanner button - sleek & responsive on all viewports */}
             <Link
-              href="/escalated"
-              className="flex items-center gap-1.5 bg-zinc-900 text-zinc-200 border border-zinc-800 hover:bg-zinc-800 px-2.5 py-1.5 rounded-xl text-[11px] font-mono font-bold"
-              title="Escalation Board"
+              href="/scan"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium bg-white text-black hover:bg-zinc-200 transition-all active:scale-95 shadow-sm shrink-0"
+              title="Open Road Defect Camera Scanner"
             >
-              <ShieldAlert className="w-3.5 h-3.5 text-white shrink-0" />
-              <span>Board</span>
-              <span className="bg-black px-1.5 py-0.2 rounded-full text-[10px] text-white">
-                {escalatedCount}
-              </span>
+              <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="inline">Scanner</span>
             </Link>
 
+            {/* Mobile Hamburger Toggle (md:hidden) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-9 h-9 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white flex items-center justify-center border border-zinc-800 cursor-pointer active:scale-95 transition-all"
-              aria-label="Toggle Navigation Menu"
+              className="md:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white flex items-center justify-center border border-zinc-800 cursor-pointer active:scale-95 transition-all shrink-0"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -116,42 +128,94 @@ export default function Navbar() {
 
       {/* Mobile Drawer Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-zinc-800 bg-black/95 px-4 pt-3 pb-5 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="md:hidden border-t border-zinc-800/80 bg-zinc-950/98 backdrop-blur-xl px-4 py-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200 max-w-full overflow-hidden shadow-2xl">
+          {/* Main Actions */}
           <Link
             href="/scan"
             onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-bold transition-all ${pathname === '/scan'
+            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-semibold transition-all ${
+              pathname === '/scan'
                 ? 'bg-white text-black'
-                : 'text-zinc-300 bg-zinc-950 border border-zinc-800/80 hover:bg-zinc-900'
-              }`}
+                : 'text-zinc-200 bg-zinc-900 border border-zinc-800 hover:bg-zinc-850'
+            }`}
           >
             <div className="flex items-center gap-2.5">
-              <Camera className="w-4 h-4" />
+              <Camera className="w-4 h-4 text-inherit" />
               <span>Camera Road Scanner</span>
             </div>
-            <span className="text-[10px] font-mono opacity-80">CAPTURE</span>
+            <span className="text-[10px] font-mono opacity-80 bg-black/30 px-2 py-0.5 rounded-full">
+              CAPTURE
+            </span>
           </Link>
 
           <Link
             href="/escalated"
             onClick={() => setMobileMenuOpen(false)}
-            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-bold transition-all ${pathname === '/escalated'
+            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-semibold transition-all ${
+              pathname === '/escalated'
                 ? 'bg-white text-black'
-                : 'text-zinc-300 bg-zinc-950 border border-zinc-800/80 hover:bg-zinc-900'
-              }`}
+                : 'text-zinc-200 bg-zinc-900 border border-zinc-800 hover:bg-zinc-850'
+            }`}
           >
             <div className="flex items-center gap-2.5">
-              <ShieldAlert className="w-4 h-4" />
+              <ShieldAlert className="w-4 h-4 text-inherit" />
               <span>Priority Escalation Board</span>
             </div>
-            <span className="text-[10px] font-mono bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-800">
+            <span className="text-[10px] font-mono bg-rose-500/10 text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-full font-bold">
               {escalatedCount} Active
             </span>
           </Link>
 
-          <div className="pt-2 border-t border-zinc-900 flex items-center justify-between text-[11px] font-mono text-zinc-500 px-1">
+          <Link
+            href="/tender-complaint"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`flex items-center justify-between p-3 rounded-2xl text-xs font-semibold transition-all ${
+              pathname === '/tender-complaint'
+                ? 'bg-white text-black'
+                : 'text-zinc-200 bg-zinc-900 border border-zinc-800 hover:bg-zinc-850'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <FileSpreadsheet className="w-4 h-4 text-inherit" />
+              <span>Lodge Tender Complaint</span>
+            </div>
+            <span className="text-[10px] font-mono text-zinc-500">
+              LEGAL
+            </span>
+          </Link>
+
+          {/* Quick Page Jump Links */}
+          <div className="pt-2 pb-1 border-t border-zinc-900 grid grid-cols-3 gap-2 text-center text-xs font-medium">
+            <a
+              href={isHome ? '#procedure' : '/#procedure'}
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-2 px-1 rounded-xl bg-zinc-900/60 hover:bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800/60 flex flex-col items-center gap-1 transition-colors"
+            >
+              <Compass className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-[11px]">Procedure</span>
+            </a>
+            <a
+              href={isHome ? '#features' : '/#features'}
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-2 px-1 rounded-xl bg-zinc-900/60 hover:bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800/60 flex flex-col items-center gap-1 transition-colors"
+            >
+              <Zap className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-[11px]">Features</span>
+            </a>
+            <a
+              href={isHome ? '#faq' : '/#faq'}
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-2 px-1 rounded-xl bg-zinc-900/60 hover:bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800/60 flex flex-col items-center gap-1 transition-colors"
+            >
+              <HelpCircle className="w-3.5 h-3.5 text-zinc-400" />
+              <span className="text-[11px]">FAQ</span>
+            </a>
+          </div>
+
+          {/* System Footer Status */}
+          <div className="pt-2 border-t border-zinc-900/80 flex items-center justify-between text-[11px] font-mono text-zinc-500 px-1">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-zinc-400" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
               <span>20 Tenders Monitored</span>
             </span>
             <span>UP PWD / LDA</span>
