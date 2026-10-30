@@ -48,7 +48,7 @@ export function classifyRoadImageFromPixels(
 
   let totalLuminance = 0;
   let totalSaturation = 0;
-  let roadPavementPixels = 0;
+  let neutralAsphaltPixels = 0;
   let skinTonePixels = 0;
   let foliagePixels = 0;
   let vividPixels = 0;
@@ -71,39 +71,35 @@ export function classifyRoadImageFromPixels(
     const sat = max === 0 ? 0 : delta / max;
     totalSaturation += sat;
 
+    // 1. Asphalt neutral color check:
+    // Road asphalt/concrete is low saturation and balanced across RGB channels
     const rgDiff = Math.abs(r - g);
     const gbDiff = Math.abs(g - b);
     const rbDiff = Math.abs(r - b);
 
-    // 1. Road pavement characteristics (Asphalt, Bitumen, Concrete, Sand, or Road Dirt):
-    // Real roads in outdoor lighting can have warm sunlight, brown dirt, or gray concrete.
-    const isNeutralAsphalt = sat < 0.45 && rgDiff < 55 && gbDiff < 50 && rbDiff < 65 && lum >= 15 && lum <= 235;
-    const isEarthyRoadOrMud = sat < 0.60 && lum >= 15 && lum <= 220 && (r >= b || rbDiff < 70) && gbDiff < 45;
-    const isConcretePavement = sat < 0.35 && lum >= 30 && lum <= 240 && rgDiff < 35 && gbDiff < 35;
-
-    if (isNeutralAsphalt || isEarthyRoadOrMud || isConcretePavement) {
-      roadPavementPixels++;
+    if (sat < 0.32 && rgDiff < 35 && gbDiff < 35 && rbDiff < 35 && lum >= 20 && lum <= 210) {
+      neutralAsphaltPixels++;
     }
 
-    // 2. Skin tone detection (reject selfies/portraits - smooth human skin)
-    if (r > 95 && g > 45 && b > 25 && r > g && r > b && (r - g) >= 15 && sat > 0.25 && sat < 0.68) {
+    // 2. Skin tone detection (reject selfies/portraits)
+    if (r > 95 && g > 40 && b > 20 && r > g && r > b && (r - g) >= 12 && sat > 0.22 && sat < 0.68) {
       skinTonePixels++;
     }
 
     // 3. Foliage/grass detection (reject garden/parks without roads)
-    if (g > r * 1.25 && g > b * 1.25 && sat > 0.35) {
+    if (g > r * 1.12 && g > b * 1.12 && sat > 0.25) {
       foliagePixels++;
     }
 
     // 4. High vivid saturation (indoor toys, posters, colorful clothing, vibrant screens)
-    if (sat > 0.62) {
+    if (sat > 0.55) {
       vividPixels++;
     }
   }
 
   const avgLuminance = totalLuminance / totalPixels;
   const avgSaturation = totalSaturation / totalPixels;
-  const roadRatio = roadPavementPixels / totalPixels;
+  const asphaltRatio = neutralAsphaltPixels / totalPixels;
   const skinRatio = skinTonePixels / totalPixels;
   const foliageRatio = foliagePixels / totalPixels;
   const vividRatio = vividPixels / totalPixels;
@@ -113,6 +109,7 @@ export function classifyRoadImageFromPixels(
   let edgeCount = 0;
   let darkCavityPixels = 0;
 
+  // Sample grid skipping border for performance
   const step = 2;
   let sampledCount = 0;
   for (let y = 1; y < height - 1; y += step) {
@@ -124,12 +121,12 @@ export function classifyRoadImageFromPixels(
       gradientSum += grad;
       sampledCount++;
 
-      if (grad > 18) {
+      if (grad > 22) {
         edgeCount++;
       }
 
       // Check for pothole cavity (localized dark region relative to road median)
-      if (gray[idx] < avgLuminance * 0.75 && gray[idx] >= 10) {
+      if (gray[idx] < avgLuminance * 0.72 && gray[idx] >= 15) {
         darkCavityPixels++;
       }
     }
@@ -140,18 +137,16 @@ export function classifyRoadImageFromPixels(
   const cavityRatio = sampledCount > 0 ? darkCavityPixels / sampledCount : 0;
 
   // Calculate scores
-  const asphaltNeutralScore = Math.min(100, Math.round(roadRatio * 110));
+  const asphaltNeutralScore = Math.min(100, Math.round(asphaltRatio * 130));
   const textureVariance = Math.round(meanGradient * 10) / 10;
   const defectPresenceScore = Math.min(
     100,
-    Math.round(edgeDensity * 120 + cavityRatio * 90 + (roadRatio > 0.3 ? 20 : 0))
+    Math.round((edgeDensity * 120 + cavityRatio * 80 + (asphaltRatio > 0.4 ? 20 : 0)))
   );
 
   // REJECTION CRITERIA:
-  // 1. Extreme non-road objects:
-
-  // Pure portrait selfie (high skin tone AND low texture variance typical of human skin)
-  if (skinRatio > 0.42 && meanGradient < 14.0) {
+  // 1. Extreme non-road color (Selfie, skin, foliage, or vivid indoor object)
+  if (skinRatio > 0.28) {
     return {
       isRoad: false,
       confidence: Math.round((1 - skinRatio) * 100),
@@ -166,8 +161,7 @@ export function classifyRoadImageFromPixels(
     };
   }
 
-  // Pure indoor vivid toys / colorful synthetic graphics
-  if (vividRatio > 0.48) {
+  if (vividRatio > 0.35) {
     return {
       isRoad: false,
       confidence: Math.round((1 - vividRatio) * 100),
@@ -182,8 +176,7 @@ export function classifyRoadImageFromPixels(
     };
   }
 
-  // Pure dense vegetation / garden lawn without road surface
-  if (foliageRatio > 0.60 && roadRatio < 0.20) {
+  if (foliageRatio > 0.45) {
     return {
       isRoad: false,
       confidence: Math.round((1 - foliageRatio) * 100),
@@ -199,7 +192,7 @@ export function classifyRoadImageFromPixels(
   }
 
   // 2. Plain blank surface check (painted wall, paper, ceiling, laptop screen)
-  if (edgeDensity < 0.003 && meanGradient < 2.0 && cavityRatio < 0.01) {
+  if (edgeDensity < 0.02 && meanGradient < 7.0) {
     return {
       isRoad: false,
       confidence: 15,
@@ -215,7 +208,7 @@ export function classifyRoadImageFromPixels(
   }
 
   // 3. Over-exposure or lens blackout
-  if (avgLuminance > 248 || avgLuminance < 8) {
+  if (avgLuminance > 225 || avgLuminance < 18) {
     return {
       isRoad: false,
       confidence: 10,
@@ -230,12 +223,12 @@ export function classifyRoadImageFromPixels(
     };
   }
 
-  // 4. Road presence threshold:
-  // Must exhibit road pavement characteristics OR visible surface defects/aggregate texture
-  if (roadRatio < 0.20 && defectPresenceScore < 15 && textureVariance < 8.0) {
+  // 4. Asphalt presence threshold:
+  // At least 35% of the frame must exhibit neutral pavement coloration with low saturation
+  if (asphaltRatio < 0.35 || avgSaturation > 0.38) {
     return {
       isRoad: false,
-      confidence: Math.round(roadRatio * 100),
+      confidence: Math.round(asphaltRatio * 100),
       reason: 'Pavement asphalt characteristics not identified in photo.',
       metrics: {
         asphaltNeutralScore,
@@ -250,7 +243,7 @@ export function classifyRoadImageFromPixels(
   // PASSED: Recognizable road surface
   const confidence = Math.min(
     99,
-    Math.max(68, Math.round(roadRatio * 50 + Math.min(30, meanGradient * 2) + (defectPresenceScore > 20 ? 15 : 10)))
+    Math.max(65, Math.round(asphaltRatio * 60 + Math.min(30, meanGradient * 2) + 20))
   );
 
   return {

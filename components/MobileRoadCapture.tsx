@@ -20,9 +20,8 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { DefectReport } from '@/lib/db';
-import { DetectedPothole, PavementDiagnostics, detectPotholesFromPixels } from '@/lib/potholeDetector';
+import { DetectedPothole } from '@/lib/potholeDetector';
 import { classifyRoadImageFromPixels, INVALID_ROAD_MESSAGE } from '@/lib/roadClassifier';
-import { extractExifData } from '@/lib/exif';
 
 export interface PresetLocation {
   name: string;
@@ -252,7 +251,7 @@ export default function MobileRoadCapture() {
     openDesktopWebcam('environment');
   };
 
-  // Optimize image dimensions and evaluate road recognition & real pothole detection
+  // Optimize image dimensions and evaluate road recognition
   const optimizeAndVerifyImage = async (
     source: File | HTMLCanvasElement
   ): Promise<{
@@ -260,27 +259,8 @@ export default function MobileRoadCapture() {
     reason?: string;
     blob: Blob;
     displayUrl: string;
-    diagnostics?: PavementDiagnostics;
-    exifLat?: number | null;
-    exifLng?: number | null;
   }> => {
-    return new Promise(async (resolve, reject) => {
-      let exifLat: number | null = null;
-      let exifLng: number | null = null;
-
-      if (source instanceof File) {
-        try {
-          const arrayBuffer = await source.arrayBuffer();
-          const exif = await extractExifData(arrayBuffer);
-          if (exif.hasGps && exif.latitude !== null && exif.longitude !== null) {
-            exifLat = exif.latitude;
-            exifLng = exif.longitude;
-          }
-        } catch (exifErr) {
-          console.warn('Client EXIF extraction fallback:', exifErr);
-        }
-      }
-
+    return new Promise((resolve, reject) => {
       const processCanvas = (canvas: HTMLCanvasElement, displayUrl: string) => {
         try {
           // 1. Generate 256x256 thumbnail for rapid Computer Vision road evaluation
@@ -298,19 +278,7 @@ export default function MobileRoadCapture() {
           // 2. Classify image with road & pothole recognition engine
           const classification = classifyRoadImageFromPixels(imgData.data, 256, 256);
 
-          // 3. Detect real potholes from pixel features
-          let diagnostics: PavementDiagnostics | undefined;
-          if (classification.isRoad) {
-            diagnostics = detectPotholesFromPixels(
-              imgData.data,
-              256,
-              256,
-              exifLat ?? parseFloat(lat),
-              exifLng ?? parseFloat(lng)
-            );
-          }
-
-          // 4. Compress main canvas to ~300KB JPEG (eliminates large payload network errors)
+          // 3. Compress main canvas to ~300KB JPEG (eliminates large payload network errors)
           canvas.toBlob(
             (blob) => {
               if (!blob) {
@@ -322,9 +290,6 @@ export default function MobileRoadCapture() {
                 reason: classification.reason,
                 blob,
                 displayUrl,
-                diagnostics,
-                exifLat,
-                exifLng,
               });
             },
             'image/jpeg',
@@ -391,21 +356,8 @@ export default function MobileRoadCapture() {
       if (!processed.isRoad) {
         // Image is not a recognized road or pothole
         setIsAnalyzing(false);
-        setErrorMsg(processed.reason || INVALID_ROAD_MESSAGE);
+        setErrorMsg(INVALID_ROAD_MESSAGE);
         return;
-      }
-
-      // If photo contained real EXIF GPS coordinates, update coordinates
-      let targetLat = lat;
-      let targetLng = lng;
-      if (processed.exifLat && processed.exifLng) {
-        targetLat = processed.exifLat.toFixed(5);
-        targetLng = processed.exifLng.toFixed(5);
-        setLat(targetLat);
-        setLng(targetLng);
-        setSelectedPresetName('GPS Geotagged Camera Photo');
-        setSelectedPreset(null);
-        setGpsStatus('locked');
       }
 
       // 2. Submit optimized payload to server
@@ -415,21 +367,10 @@ export default function MobileRoadCapture() {
 
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('latitude', targetLat);
-      formData.append('longitude', targetLng);
+      formData.append('latitude', lat);
+      formData.append('longitude', lng);
       formData.append('userNotes', `Defect captured at ${selectedPresetName}`);
       formData.append('isRoadValid', 'true');
-      if (processed.diagnostics) {
-        formData.append('potholeDiagnostics', JSON.stringify(processed.diagnostics));
-        const primary = processed.diagnostics.detectedPotholes?.[0];
-        if (primary) {
-          formData.append('defectDepthCm', String(primary.estimatedDepthCm));
-          formData.append('defectWidthCm', String(primary.estimatedWidthCm));
-        } else if (processed.diagnostics.potholeCount === 0) {
-          formData.append('defectDepthCm', '0');
-          formData.append('defectWidthCm', '0');
-        }
-      }
 
       const res = await fetch('/api/analyze-pothole', {
         method: 'POST',
@@ -486,10 +427,6 @@ export default function MobileRoadCapture() {
   const takeWebcamSnapshot = () => {
     if (!videoRef.current) return;
     const video = videoRef.current;
-    if (video.videoWidth === 0 || video.videoHeight === 0) {
-      console.warn('Webcam video stream not ready yet');
-      return;
-    }
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth || 1280;
     canvas.height = video.videoHeight || 720;
@@ -629,8 +566,8 @@ export default function MobileRoadCapture() {
                 gpsStatus === 'locked'
                   ? `Live GPS Active (${lat}°N, ${lng}°E). Click to refresh.`
                   : gpsStatus === 'locating'
-                    ? 'Acquiring high-accuracy GPS coordinates...'
-                    : 'Auto-detect device GPS coordinates'
+                  ? 'Acquiring high-accuracy GPS coordinates...'
+                  : 'Auto-detect device GPS coordinates'
               }
             >
               {gpsStatus === 'locating' ? (
@@ -688,17 +625,19 @@ export default function MobileRoadCapture() {
                       <div
                         key={pothole.id}
                         style={{ top, left, width, height }}
-                        className={`absolute border-2 rounded-lg transition-all ${isCritical
-                          ? 'border-rose-500 bg-rose-500/10 shadow-[0_0_12px_rgba(244,63,94,0.5)]'
-                          : isHigh
+                        className={`absolute border-2 rounded-lg transition-all ${
+                          isCritical
+                            ? 'border-rose-500 bg-rose-500/10 shadow-[0_0_12px_rgba(244,63,94,0.5)]'
+                            : isHigh
                             ? 'border-amber-400 bg-amber-400/10 shadow-[0_0_12px_rgba(251,191,36,0.4)]'
                             : 'border-white bg-white/10'
-                          }`}
+                        }`}
                       >
                         <div className="absolute -top-6 left-0 flex items-center gap-1 bg-black/90 px-2 py-0.5 rounded text-[10px] font-mono font-bold text-white border border-zinc-700 whitespace-nowrap shadow-md">
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${isCritical ? 'bg-rose-500 animate-ping' : 'bg-amber-400'
-                              }`}
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              isCritical ? 'bg-rose-500 animate-ping' : 'bg-amber-400'
+                            }`}
                           />
                           <span>#{idx + 1} Pothole ({pothole.confidence}%)</span>
                         </div>
@@ -886,8 +825,8 @@ export default function MobileRoadCapture() {
                     {selectedPreset.complaintCount >= 3
                       ? '🚨 Notice Issued'
                       : selectedPreset.complaintCount > 0
-                        ? `⚡ ${selectedPreset.complaintCount}/3 Complaints`
-                        : '0 Complaints'}
+                      ? `⚡ ${selectedPreset.complaintCount}/3 Complaints`
+                      : '0 Complaints'}
                   </span>
                   <span className="text-[10px] font-mono bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 px-2 py-0.5 rounded-md border border-zinc-200 dark:border-zinc-800">
                     {selectedPreset.roadType}
@@ -954,7 +893,7 @@ export default function MobileRoadCapture() {
                 <div className="bg-zinc-50 dark:bg-black p-3.5 rounded-2xl border border-zinc-200 dark:border-zinc-800">
                   <div className="text-[10px] text-zinc-500 uppercase">Defects Detected</div>
                   <div className="text-base font-extrabold text-zinc-900 dark:text-white mt-0.5">
-                    {diagnostics.potholeCount} Pothole{diagnostics.potholeCount !== 1 ? 's' : ''}
+                    {diagnostics.potholeCount} Pothole{diagnostics.potholeCount > 1 ? 's' : ''}
                   </div>
                 </div>
 
